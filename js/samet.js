@@ -14,8 +14,6 @@ $(document).ready(function(){
 
 var system_state = 0;
 var map = new Object();
-//paper = Raphael("canvas",100,100);
-
 
 function initialize(){
     /// Canvas variable
