@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SAM Engineer Tool</title>
+    <meta charset="utf-8">
+    <link href="css/samet.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="js/jquery.js" ></script>
+    <script type="text/javascript" src="js/raphael.js" ></script>
+    <script type="text/javascript" src="js/samet.js" ></script>
+  </head>
+
+  <body ondragstart="window.event.returnValue=false"
+        oncontextmenu="window.event.returnValue=false"
+        onselectstart="event.returnValue=false">
+
+    <div id="desktop">
+      <div id="canvas"></div>
+      
+      <!--div id="tag_box">
+        <table id="tag_table">
+          ${makeTag(tags)}
+        </table>
+        <table id="relay_table">
+          ${makeRelay(relays)}
+        </table>
+      </div-->      
+      <div id="message_box">
+      </div>
+      <div id="button_box">
+        <button id=left_btn class="msg_btn">左</button>
+        <button id=mid_btn class="msg_btn">中</button>
+        <button id=right_btn class="msg_btn">右</button>
+        <!--  ${makeButton(btns)}  -->
+      </div>
+    </div>
+    <!--audio id="alarm_sound">
+      <source src="media/BurglarAlarm.mp3">
+    </audio-->
+  </body>
+</html>
+
+<!--%def name="makeTag(row)">
+    <tr>
+    % for id,name in row:
+        <td id=${id}>${name}</td>\
+    % endfor
+    </tr>
+</%def-->
+
+<!--%def name="makeButton(btns)">
+    % for id,btn in btns:
+       <button id=${id} class="msg_btn">${btn}</button>
+    % endfor
+</%def-->
+
+<!--%def name="makeRelay(relays)">
+    <tr>
+    % for id,myclass,name in relays:
+        <td id=${id} class=${myclass}>${name}</td>\
+    % endfor
+    </tr>
+</%def-->
+

@@ -1,0 +1,112 @@
+body{
+    background-color: silver;
+    box-sizing: border-box;
+
+}
+
+#desktop{
+    background-color: silver;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    border:4px solid red;
+}
+
+#canvas{
+    box-sizing: border-box;
+    position:absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 50px;/*90 px*/
+    width: 100%;
+    background-color: black;
+    border: 4px solid silver;
+}
+
+#tag_box{
+    box-sizing: border-box;
+    position:absolute;
+    left:4px;
+    bottom:50px;
+    right:4px;
+    height:40px;  
+    background-color:gray;
+}
+
+#tag_table{
+    height: 100%;
+    width: 100%;
+    background-color: gray;
+    border:1px solid silver;
+}
+
+#tag_table td{
+    width: 10%;
+    border:2px solid silver;
+}
+
+.tag_highlight {
+    font-weight: bold;
+    background-color: aqua;
+}
+
+#relay_table{
+    height: 100%;
+    width: 100%;
+    background-color: gray;
+    color: yellow;
+    border:1px solid silver;
+}
+
+#relay_table td{
+    /*#height: 80%;*/
+    width: 12%;
+    border:2px solid silver;
+}
+
+.relay_on {
+    font-weight: bold;
+    background-color: red;
+}
+
+.relay_off {
+    font-weight: bold;
+    background-color: blue;
+}
+
+#message_box{
+    box-sizing: border-box;
+    position:absolute;
+    left:0px;
+    bottom:0px;
+    height: 50px;
+    width:67%;
+    background-color: black;
+    border:4px solid silver;
+    font-size: 30px;
+    padding: 5px 6px 5px 6px;
+    color: red;
+}
+
+#button_box{
+    box-sizing: border-box;
+    position:absolute;
+    left:67%;
+    bottom:0px;
+    height:50px; /* 5%; */
+    width:33%;
+    background-color: silver;
+    border:4px solid silver;
+}
+
+
+.msg_btn{
+    height: 40px;
+    width: 32.3%;
+    font-size: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
