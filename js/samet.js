@@ -26,14 +26,16 @@ function initialize(){
     map.background = map.paper.image("media/map.png",0,0,map.width,map.height);
     map.scale_x = map.width / 1912;   
     map.scale_y = map.height / 1022;  
-//
-   
-    map.EventListener = $('#canvas').on('click', function(event){
-    console.log(event.pageX + " " + event.pageY);
-//	meijing_moveDevice(currentActiveDevice);
 
+    // map.EventListener = $('#canvas').on('click', function(event){
+    // 	console.log(event.pageX + " " + event.pageY);
+	
+    // 	//device_set[current_device].translate(event.pageX,event.pageY);
+    // 	var form = "t" + event.pageX + "," + event.pageY;
+    // 	device_set[current_device].transform(form);
+    // 	device_text[current_device].transform(form);
 
-    });
+    // });
     
 
     set_system_state('Ready');
@@ -363,8 +365,8 @@ var device_set = 0;
 var current_device = 0;
 var device_set_length = 0;
 var device_text = 0;
-
-
+var device_controls;
+var cx,cy;
 function drawModule(data){
     var path = "", line,x0,y0,x1,y1,icon,dev_type;
     if(device_set) {
@@ -431,9 +433,41 @@ function drawModule(data){
     device_set[current_device].attr(module_selected_attr);
     var msg = device_set[current_device].data('name');
     message(msg);
+    var k = device_set[current_device].data("key");
+    x0 = module_datas[k]["x0"] * map.scale_x;
+    y0 = module_datas[k]["y0"] * map.scale_y;
+    device_controls =map.paper.circle().attr({fill: "yellow",
+					      stroke: "red",
+					      "stroke-width": 2,
+					      cx: x0,
+					      cy: y0,
+					      r : 5
+					     }); 
+    device_controls.update = function (x, y){     
+	var X = this.attr("cx") + x,//相对偏移量
+        Y = this.attr("cy") + y;
+	var k = device_set[current_device].data("key");
+	module_datas[k]["x0"] = X /  map.scale_x;
+	module_datas[k]["y0"] = Y / map.scale_y;
+        this.attr({cx: X, cy: Y});//cx+=x,cy+=y
+	//device_controls.attr({"cx" : x , "cy" : y});
+	device_set[current_device].transform('t'+ X + ','+ Y);
+	device_text[current_device].transform('t'+ X + ','+ Y);   
+    };
+
+    device_controls.drag(move, up);
     
     return true;
 };
+function move(dx, dy) {
+    this.update(dx - (this.dx || 0), dy - (this.dy || 0));
+    this.dx = dx;
+    this.dy = dy;
+}
+function up() {
+    this.dx = this.dy = 0;
+}
+
 
 function handle_move_module_update(event) {
     $('#message_box').text('Module Placement');
@@ -449,7 +483,12 @@ function handle_move_module_next(event) {
     device_set[current_device].attr(module_selected_attr);
     var msg = device_set[current_device].data('name');
     message("Name: " + msg);
-    //meijing_selectedDevice(device_set[current_device]);
+    var k = device_set[current_device].data("key");
+    
+    cx = module_datas[k]["x0"] * map.scale_x;
+    cy = module_datas[k]["y0"] * map.scale_y;
+    device_controls.attr({"cx" : cx , "cy" : cy});
+
     return false;
 };
 
@@ -466,6 +505,7 @@ function handle_move_module_next(event) {
 
 function handle_move_module_back(event) {
     device_set.attr(module_attr);
+    device_controls.remove();
     set_system_state('Ready');
     return false;
 }  
