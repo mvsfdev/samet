@@ -27,21 +27,20 @@ function initialize(){
     map.scale_x = map.width / 1912;   
     map.scale_y = map.height / 1022;  
 
-    // map.EventListener = $('#canvas').on('click', function(event){
-    // 	console.log(event.pageX + " " + event.pageY);
-	
-    // 	//device_set[current_device].translate(event.pageX,event.pageY);
-    // 	var form = "t" + event.pageX + "," + event.pageY;
-    // 	device_set[current_device].transform(form);
-    // 	device_text[current_device].transform(form);
-
-    // });
-    
-
     set_system_state('Ready');
    
     return false; 
 };
+
+function move(dx, dy) {
+    this.update(dx - (this.dx || 0), dy - (this.dy || 0));
+    this.dx = dx;
+    this.dy = dy;
+}
+function up() {
+    this.dx = this.dy = 0;
+}
+
 
 function clear_path(setx) {
     var il = setx.length;
@@ -115,6 +114,11 @@ function handle_parament(event) {
  *   Install
  * 
  ***********************************************************************************************/
+var drag_point = { "fill" : "yellow",
+		   "stroke" : "red",
+		   "stroke-width": 2,
+		 }; 
+
 dispatch['Install'] = {'LT': '地图',      'L' : handle_install_from_map,
                        'MT': '读PM',     'M' : handle_install_readPM,
                        'RT': '返回',     'R' : handle_install_back,
@@ -436,21 +440,14 @@ function drawModule(data){
     var k = device_set[current_device].data("key");
     x0 = module_datas[k]["x0"] * map.scale_x;
     y0 = module_datas[k]["y0"] * map.scale_y;
-    device_controls =map.paper.circle().attr({fill: "yellow",
-					      stroke: "red",
-					      "stroke-width": 2,
-					      cx: x0,
-					      cy: y0,
-					      r : 5
-					     }); 
+    device_controls =map.paper.circle(x0, y0, 5).attr(drag_point);
     device_controls.update = function (x, y){     
-	var X = this.attr("cx") + x,//相对偏移量
+	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
 	var k = device_set[current_device].data("key");
 	module_datas[k]["x0"] = X /  map.scale_x;
 	module_datas[k]["y0"] = Y / map.scale_y;
-        this.attr({cx: X, cy: Y});//cx+=x,cy+=y
-	//device_controls.attr({"cx" : x , "cy" : y});
+        this.attr({cx: X, cy: Y});
 	device_set[current_device].transform('t'+ X + ','+ Y);
 	device_text[current_device].transform('t'+ X + ','+ Y);   
     };
@@ -459,15 +456,6 @@ function drawModule(data){
     
     return true;
 };
-function move(dx, dy) {
-    this.update(dx - (this.dx || 0), dy - (this.dy || 0));
-    this.dx = dx;
-    this.dy = dy;
-}
-function up() {
-    this.dx = this.dy = 0;
-}
-
 
 function handle_move_module_update(event) {
     $('#message_box').text('Module Placement');
