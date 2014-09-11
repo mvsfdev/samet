@@ -14,6 +14,8 @@ $(document).ready(function(){
 
 var system_state = 0;
 var map = new Object();
+//paper = Raphael("canvas",100,100);
+
 
 function initialize(){
     /// Canvas variable
@@ -24,11 +26,20 @@ function initialize(){
     map.background = map.paper.image("media/map.png",0,0,map.width,map.height);
     map.scale_x = map.width / 1912;   
     map.scale_y = map.height / 1022;  
+//
+   
+    map.EventListener = $('#canvas').on('click', function(event){
+    console.log(event.pageX + " " + event.pageY);
+//	meijing_moveDevice(currentActiveDevice);
+
+
+    });
+    
 
     set_system_state('Ready');
+   
     return false; 
 };
-
 
 function clear_path(setx) {
     var il = setx.length;
@@ -43,6 +54,7 @@ function message(mesg) {
 }
 
 
+
 var dispatch = {
     'Ready'       :    {'LT': '设置',   'L' : handle_install,
                         'MT': '摆放',     'M' : handle_set,
@@ -51,7 +63,7 @@ var dispatch = {
 };    
 
 function set_system_state(state) {
-    if (system_state == state) {
+     if (system_state == state) {
         return false;
     }
     system_state = state;
@@ -139,7 +151,8 @@ dispatch['Movement'] = {'LT': '电缆',      'L' : handle_move_cable,
 
 function handle_move_cable(event) {
     set_system_state('Cable'); 
-    // $('#message_box').text('cable');
+
+    drawSegment(segment_datas);
     return false;
 };
 
@@ -153,7 +166,9 @@ function handle_move_module(event) {
 
 function handle_move_aux(event) {
     set_system_state('Aux');
-    //$('#message_box').text('Aux');
+
+    drawAuxiliary(auxiliary_datas);
+
     return false;
 };
 
@@ -163,22 +178,109 @@ function handle_move_aux(event) {
  *   Cable
  * 
  ***********************************************************************************************/
-dispatch['Cable'] = {'LT': '起点',      'L' : handle_move_cable_start,
-		     'MT': '下一个',     'M' : handle_move_cable_next,
-		     'RT': '返回',     'R' : handle_move_cable_back,
+dispatch['Cable'] = {'LT': '起点',      'L' : handle_move_segment_update,
+		     'MT': '下一个',     'M' : handle_move_segment_next,
+		     'RT': '返回',     'R' : handle_move_segment_back,
 		     'MSG': '参数设置模式......'};
 
-function handle_move_cable_start(event) {
-    $('#message_box').text('cable');
+
+var segment_attr = { "stroke" : "green",
+                     "stroke-width" : 5,
+		     "fill" : "green",
+		     "fill-opacity" : 1
+		    };
+
+var segment_selected_attr = { "stroke" : "red",
+			      "stroke-width" : 5,
+			      "fill" : "red",
+			      "fill-opacity" : 1
+			     };
+
+var segment_datas = {
+   "segment1" :{'x0' : 100,
+		'y0' : 100,
+		'x1' : 100,
+		'y1' : 200,
+		'id' : 1,
+		'name' : 'segment1',
+		'type' : "seg"
+	       },
+
+   "segment2" :{'x0' : 200,
+		'y0' : 200,
+		'x1' : 200,
+		'y1' : 400,
+		'id' : 2,
+		'name' : 'segment2',
+		'type' : 'seg'
+	       },
+
+};
+var segment_set = 0;
+var current_segment = 0;
+var segment_set_length = 0;
+
+function drawSegment(data){
+    var path = "", line,x0,y0,x1,y1;
+    if(segment_set) {
+	clear_path(segment_set);
+	segment_set.clear();
+    }
+    else {
+	segment_set = map.paper.set();
+    }
+    segment_set_length = 0;
+
+
+    $.each(data, function(name,value) {
+        x0 = value['x0'] * map.scale_x;
+        y0 = value['y0'] * map.scale_y;
+        x1 = value['x1'] * map.scale_x;
+        y1 = value['y1'] * map.scale_y;
+        path  = "M" + x0 + "," + y0 ; 
+        path += "L" + x1 + "," + y1 ; 
+
+	line = map.paper.path(path);
+	line.attr(segment_attr);
+
+        line.data('key',name);
+        line.data('id',value['id']);
+        line.data('name',value['name']);
+
+        line.attr({'title': value['name']});
+        segment_set.push(line);
+        segment_set_length += 1;
+    });
+    if (segment_set_length == 0) {
+        return false;
+    }
+
+    current_segment = 0;
+    segment_set[current_segment].attr(segment_selected_attr);
+    var msg = segment_set[current_segment].data('name');
+    message(msg);
+    return true;
+};
+
+function handle_move_segment_update(event) {
+    $('#message_box').text('Segment Placement');
     return false;
 };
 
-function handle_move_cable_next(event) {
-    $('#message_box').text('module');
+function handle_move_segment_next(event) {
+    segment_set[current_segment].attr(segment_attr);
+    current_segment++;
+    if (current_segment >= segment_set_length) {
+	current_segment = 0;
+    }
+    segment_set[current_segment].attr(segment_selected_attr);
+    var msg = segment_set[current_segment].data('name');
+    message("Name: " + msg);
     return false;
 };
 
-function handle_move_cable_back(event) {
+function handle_move_segment_back(event) {
+    segment_set.attr(segment_attr);
     set_system_state('Ready');
     return false;
 }  
@@ -214,7 +316,6 @@ var module_attr =  {"stroke" : "black",
 		    "fill" : "#0F0",
 		    "fill-opacity" : 1
 		   };
-
 var module_selected_attr =  {"stroke" : "red",
 			     "stroke-width" : 2,
 			     "fill" : "#0F0",
@@ -226,14 +327,14 @@ var module_text_attr =  {"stroke" : "black",
 			 "fill" : "black",
 			 "fill-opacity" : 1
 			};
-
+ 
 
 var module_datas = {
     'RM2': { 'x0' : 700,
 	     'y0' : 100,
 	     'x1' : 100,
 	     'y1' : 100,
-	     'id' : 1,
+	     'id' : 2,
 	     'name': "RM1",
 	     'type' : "RM"
 	   },	 
@@ -242,7 +343,7 @@ var module_datas = {
 	     'y0' : 100,
 	     'x1' : 100,
 	     'y1' : 100,
-	     'id' : 1,
+	     'id' : 3,
 	     'name': "PM1",
 	     'type' : "PM"
 	   },	 
@@ -251,7 +352,7 @@ var module_datas = {
 	     'y0' : 100,
 	     'x1' : 100,
 	     'y1' : 100,
-	     'id' : 1,
+	     'id' : 4,
 	     'name': "LU1",
 	     'type' : "LU"
 	   },	 
@@ -286,10 +387,14 @@ function drawModule(data){
     $.each(data, function(name,value) {
         x0 = value['x0'] * map.scale_x;
         y0 = value['y0'] * map.scale_y;
+        x1 = value['x1'] * map.scale_x;
+        y1 = value['y1'] * map.scale_y;
         
-        line = map.paper.path(icon_BOX).attr(module_attr);
-        line.translate(x0,y0);
+	line = map.paper.path(icon_BOX);
+	//line = map.paper.path(icon_seg);
 
+	line.attr(module_attr);
+        line.translate(x0,y0);
         line.data('key',name);
         line.data('id',value['id']);
         line.data('name',value['name']);
@@ -315,7 +420,7 @@ function drawModule(data){
         };
 
         line = map.paper.path(icon).attr(module_text_attr);
-        line.translate(x0,y0);
+      	line.translate(x0,y0);
         device_text.push(line);
     });
     if (device_set_length == 0) {
@@ -326,6 +431,7 @@ function drawModule(data){
     device_set[current_device].attr(module_selected_attr);
     var msg = device_set[current_device].data('name');
     message(msg);
+    
     return true;
 };
 
@@ -343,11 +449,23 @@ function handle_move_module_next(event) {
     device_set[current_device].attr(module_selected_attr);
     var msg = device_set[current_device].data('name');
     message("Name: " + msg);
+    //meijing_selectedDevice(device_set[current_device]);
     return false;
 };
 
+
+
+//function meijing_selectedDevice(device_set){
+//console.log(device_set);
+//console.log("ID  " + device_set.module_datas);
+//console.log("x0  " + device_set.module_datas);
+
+
+
+
+
 function handle_move_module_back(event) {
-    device_set[current_device].attr(module_attr);
+    device_set.attr(module_attr);
     set_system_state('Ready');
     return false;
 }  
@@ -358,26 +476,161 @@ function handle_move_module_back(event) {
  * 
  ***********************************************************************************************/
 
+
 dispatch['Aux'] = {'LT': '提交',       'L' : handle_move_aux_update,
 		   'MT': '下一个',     'M' : handle_move_aux_next,
 		   'RT': '返回',       'R' : handle_move_aux_back,
 		   'MSG': 'aux设置模式......'};
 
+var auxiliary_attr = { "stroke" : "blue",
+                       "stroke-width" : 2,
+		       "fill" : "blue",
+		       "fill-opacity" : 0.6
+		     };
+
+var auxiliary_selected_attr = { "stroke" : "red",
+				"stroke-width" : 2,
+				"fill" : "blue",
+				"fill-opacity" : 0.6
+			      };
+
+var auxiliary_datas = {
+    "auxiliary1" :{'x0' : 130,
+		   'y0' : 130,
+		   'x1' : 130,
+		   'y1' : 210,
+		   'x2' : 210,
+		   'y2' : 210,
+		   'x3' : 210,
+		   'y3' : 130,
+		   'id' : 1,
+		   'name' : 'auxiliary1',
+		   'type' : "seg"
+		  },
+    
+    "auxiliary2" :{'x0' : 260,
+		   'y0' : 260,
+		   'x1' : 260,
+		   'y1' : 420,
+		   'x2' : 420,
+		   'y2' : 420,
+		   'x3' : 420,
+		   'y3' : 260,
+		   'id' : 2,
+		   'name' : 'auxiliary2',
+		   'type' : 'seg'
+		  },
+    "auxiliary3" :{'x0' : 300,
+		   'y0' : 300,
+		   'x1' : 200,
+		   'y1' : 450,
+		   'x2' : 350,
+		   'y2' : 450,
+		   'x3' : 450,
+		   'y3' : 300,
+		   'id' : 3,
+		   'name' : 'auxiliary3',
+		   'type' : "seg"
+		  },
+    
+    "auxiliary4" :{'x0' : 500,
+		   'y0' : 500,
+		   'x1' : 600,
+		   'y1' : 650,
+		   'x2' : 800,
+		   'y2' : 650,
+		   'x3' : 700,
+		   'y3' : 500,
+		   'id' : 4,
+		   'name' : 'auxiliary4',
+		   'type' : 'seg'
+		  },
+
+};
+
+
+var auxiliary_set = 0;
+var current_auxiliary = 0;
+var auxiliary_set_length = 0;
+
+function drawAuxiliary(data){
+    var path = "", line,x0,y0,x1,y1,x2,y2,x3,y3;
+    if(auxiliary_set) {
+	clear_path(auxiliary_set);
+	auxiliary_set.clear();
+    }
+    else {
+	auxiliary_set = map.paper.set();
+    }
+    auxiliary_set_length = 0;
+
+
+    $.each(data, function(name,value) {
+        x0 = value['x0'] * map.scale_x;
+        y0 = value['y0'] * map.scale_y;
+        x1 = value['x1'] * map.scale_x;
+        y1 = value['y1'] * map.scale_y;
+        x2 = value['x2'] * map.scale_x;
+        y2 = value['y2'] * map.scale_y;
+        x3 = value['x3'] * map.scale_x;
+        y3 = value['y3'] * map.scale_y;
+
+        path  = "M" + x0 + "," + y0 ; 
+        path += "L" + x1 + "," + y1 ; 
+        path += "L" + x2 + "," + y2 ; 
+        path += "L" + x3 + "," + y3 ; 
+	path += "Z";
+
+	line = map.paper.path(path);
+	line.attr(auxiliary_attr);
+
+        line.data('key',name);
+        line.data('id',value['id']);
+        line.data('name',value['name']);
+
+        line.attr({'title': value['name']});
+        auxiliary_set.push(line);
+        auxiliary_set_length += 1;
+    });
+    if (auxiliary_set_length == 0) {
+        return false;
+    }
+
+    current_auxiliary = 0;
+    auxiliary_set[current_auxiliary].attr(auxiliary_selected_attr);
+    var msg = auxiliary_set[current_auxiliary].data('name');
+    message(msg);
+    return true;
+};
 
 function handle_move_aux_update(event) {
-    $('#message_box').text('update');
+    $('#message_box').text('Auxiliary Placement');
     return false;
 };
 
 function handle_move_aux_next(event) {
-    $('#message_box').text('module');
+    auxiliary_set[current_auxiliary].attr(auxiliary_attr);
+    current_auxiliary++;
+    if (current_auxiliary >= auxiliary_set_length) {
+	current_auxiliary = 0;
+    }
+    auxiliary_set[current_auxiliary].attr(auxiliary_selected_attr);
+    var msg = auxiliary_set[current_auxiliary].data('name');
+    message("Name: " + msg);
+
+  
     return false;
 };
 
 function handle_move_aux_back(event) {
+    auxiliary_set.attr(auxiliary_attr);
     set_system_state('Ready');
     return false;
 }  
+
+
+
+
 
 /***********************************************************************************************
  *
@@ -394,6 +647,7 @@ dispatch['parament'] = {'LT': '导入',      'L' : handle_parament_import,
 
 
 function handle_parament_import(event) {
+    console.log("XXXX   "+event.pageX + "   YYY "+  event.pageY);
     $('#message_box').text('导入');
     return false;
 };
@@ -412,31 +666,25 @@ function handle_parament_back(Event) {
 
 
 ///////////////////////////////////////////////////// Only Test !!!!!!!!!!!!!!
-function addx(x,y) {
-    return x + y;
-};
-
-
-var test_attr = {
-    "fill"         : "blue",
-    "stroke-dasharray" : "",
-    "stroke-linecap" : "round",
-    "stroke-opacity" : 1,
-    "stroke-width"   : 0
-};
 
 
 
-function test_x() {
-    paper.text(500,500,addx(23,56));
-    point = paper.circle(300,500, 50);
-    point.attr(test_attr);
-};
-
-function handle_back(event) {
-    set_system_state('Ready');
-    $('#message_box').text('Back');
-    return false;
-};
 
 
+
+
+
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+  
