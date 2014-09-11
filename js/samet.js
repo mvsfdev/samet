@@ -118,6 +118,10 @@ var drag_point = { "fill" : "yellow",
 		   "stroke" : "red",
 		   "stroke-width": 2,
 		 }; 
+var drag_point_end = { "fill" : "blue",
+		   "stroke" : "red",
+		   "stroke-width": 2,
+		 }; 
 
 dispatch['Install'] = {'LT': '地图',      'L' : handle_install_from_map,
                        'MT': '读PM',     'M' : handle_install_readPM,
@@ -184,7 +188,7 @@ function handle_move_aux(event) {
  *   Cable
  * 
  ***********************************************************************************************/
-dispatch['Cable'] = {'LT': '起点',      'L' : handle_move_segment_update,
+dispatch['Cable'] = {'LT': '提交',      'L' : handle_move_segment_update,
 		     'MT': '下一个',     'M' : handle_move_segment_next,
 		     'RT': '返回',     'R' : handle_move_segment_back,
 		     'MSG': '参数设置模式......'};
@@ -265,6 +269,54 @@ function drawSegment(data){
     segment_set[current_segment].attr(segment_selected_attr);
     var msg = segment_set[current_segment].data('name');
     message(msg);
+
+    var k = segment_set[current_segment].data("key");
+    x0 = segment_datas[k]["x0"] * map.scale_x;
+    y0 = segment_datas[k]["y0"] * map.scale_y;
+    x1 = segment_datas[k]["x1"] * map.scale_x;
+    y1 = segment_datas[k]["y1"] * map.scale_y;
+
+    segment_controls = map.paper.set(
+	map.paper.circle(x0, y0, 5).attr(drag_point),
+	map.paper.circle(x1, y1, 5).attr(drag_point_end)
+    );
+    segment_controls[0].update = function (x, y){     
+	var X = this.attr("cx") + x,
+        Y = this.attr("cy") + y;
+	var k = segment_set[current_segment].data("key");
+	segment_datas[k]["x0"] = X /  map.scale_x;
+	segment_datas[k]["y0"] = Y / map.scale_y;
+        this.attr({cx: X, cy: Y});
+	var value = segment_datas[k];
+        var x0 = value['x0'] * map.scale_x;
+        var y0 = value['y0'] * map.scale_y;
+        var x1 = value['x1'] * map.scale_x;
+        var y1 = value['y1'] * map.scale_y;
+        var path  = "M" + x0 + "," + y0 ; 
+        path += "L" + x1 + "," + y1 ; 
+	segment_set[current_segment].attr({path:path});
+
+    };
+    segment_controls[1].update = function (x, y){     
+	var X = this.attr("cx") + x,
+        Y = this.attr("cy") + y;
+	var k = segment_set[current_segment].data("key");
+	segment_datas[k]["x1"] = X /  map.scale_x;
+	segment_datas[k]["y1"] = Y / map.scale_y;
+        this.attr({cx: X, cy: Y});
+	var value = segment_datas[k];
+        var x0 = value['x0'] * map.scale_x;
+        var y0 = value['y0'] * map.scale_y;
+        var x1 = value['x1'] * map.scale_x;
+        var y1 = value['y1'] * map.scale_y;
+        var path  = "M" + x0 + "," + y0 ; 
+        path += "L" + x1 + "," + y1 ; 
+	segment_set[current_segment].attr({path:path});
+
+    };
+
+    segment_controls.drag(move, up);
+
     return true;
 };
 
@@ -282,11 +334,25 @@ function handle_move_segment_next(event) {
     segment_set[current_segment].attr(segment_selected_attr);
     var msg = segment_set[current_segment].data('name');
     message("Name: " + msg);
+
+    var k = segment_set[current_segment].data("key");
+    
+    cx = segment_datas[k]["x0"] * map.scale_x;
+    cy = segment_datas[k]["y0"] * map.scale_y;
+    segment_controls[0].attr({"cx" : cx , "cy" : cy});
+
+    cx = segment_datas[k]["x1"] * map.scale_x;
+    cy = segment_datas[k]["y1"] * map.scale_y;
+    segment_controls[1].attr({"cx" : cx , "cy" : cy});
+
     return false;
 };
 
 function handle_move_segment_back(event) {
     segment_set.attr(segment_attr);
+    segment_controls[0].remove();
+    segment_controls[1].remove();
+    delete segment_controls;
     set_system_state('Ready');
     return false;
 }  
@@ -440,7 +506,7 @@ function drawModule(data){
     var k = device_set[current_device].data("key");
     x0 = module_datas[k]["x0"] * map.scale_x;
     y0 = module_datas[k]["y0"] * map.scale_y;
-    device_controls =map.paper.circle(x0, y0, 5).attr(drag_point);
+    device_controls = map.paper.circle(x0, y0, 5).attr(drag_point);
     device_controls.update = function (x, y){     
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
