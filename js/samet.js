@@ -287,16 +287,8 @@ function drawSegment(data){
 	segment_datas[k]["x0"] = X /  map.scale_x;
 	segment_datas[k]["y0"] = Y / map.scale_y;
         this.attr({cx: X, cy: Y});
-	var value = segment_datas[k];
-        var x0 = value['x0'] * map.scale_x;
-        var y0 = value['y0'] * map.scale_y;
-        var x1 = value['x1'] * map.scale_x;
-        var y1 = value['y1'] * map.scale_y;
-        var path  = "M" + x0 + "," + y0 ; 
-        path += "L" + x1 + "," + y1 ; 
-	segment_set[current_segment].attr({path:path});
-
-    };
+	update_segment(k);
+     };
     segment_controls[1].update = function (x, y){     
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
@@ -304,19 +296,11 @@ function drawSegment(data){
 	segment_datas[k]["x1"] = X /  map.scale_x;
 	segment_datas[k]["y1"] = Y / map.scale_y;
         this.attr({cx: X, cy: Y});
-	var value = segment_datas[k];
-        var x0 = value['x0'] * map.scale_x;
-        var y0 = value['y0'] * map.scale_y;
-        var x1 = value['x1'] * map.scale_x;
-        var y1 = value['y1'] * map.scale_y;
-        var path  = "M" + x0 + "," + y0 ; 
-        path += "L" + x1 + "," + y1 ; 
-	segment_set[current_segment].attr({path:path});
-
+	update_segment(k);
     };
 
     segment_controls.drag(move, up);
-
+ 
     return true;
 };
 
@@ -357,6 +341,16 @@ function handle_move_segment_back(event) {
     return false;
 }  
 
+function update_segment(k){
+	var value = segment_datas[k];
+        var x0 = value['x0'] * map.scale_x;
+        var y0 = value['y0'] * map.scale_y;
+        var x1 = value['x1'] * map.scale_x;
+        var y1 = value['y1'] * map.scale_y;
+        var path  = "M" + x0 + "," + y0 ; 
+        path += "L" + x1 + "," + y1 ; 
+	segment_set[current_segment].attr({path:path});
+}
 
 /***********************************************************************************************
  *
@@ -375,7 +369,7 @@ var icon_PM ="M7.361,3.676h4.173c0.825,0,1.491,0.233,1.998,0.701s0.761,1.124,0.7
 icon_PM += "M15.879,3.676h1.81l2.681,7.883l2.663-7.883h1.797V13h-1.207V7.496c0-0.189,0.005-0.505,0.014-0.945c0.008-0.44,0.012-0.912,0.012-1.416L20.986,13h-1.252l-2.687-7.865v0.286c0,0.229,0.006,0.576,0.019,1.044s0.019,0.812,0.019,1.031V13h-1.206V3.676z";
 var icon_LU ="M8.681,3.676h1.263v8.213h4.678V13H8.681V3.676z";
 icon_LU += "M17.276,3.676v5.764c0,0.677,0.128,1.239,0.384,1.688c0.38,0.678,1.02,1.016,1.919,1.016c1.079,0,1.813-0.365,2.201-1.098c0.209-0.397,0.313-0.934,0.313-1.605V3.676h1.275v5.236c0,1.146-0.154,2.029-0.465,2.646c-0.568,1.126-1.643,1.689-3.223,1.689c-1.58,0-2.652-0.563-3.217-1.689C16.155,10.941,16,10.059,16,8.912V3.676H17.276z";
-
+ 
 var icon_TU = "M15.46,3.676v1.11h-3.142V13h-1.276V4.786H7.9v-1.11H15.46z";
 icon_TU += "M17.987,3.676v5.764c0,0.677,0.128,1.239,0.384,1.688c0.379,0.678,1.02,1.016,1.919,1.016c1.079,0,1.813-0.365,2.201-1.098c0.209-0.397,0.313-0.934,0.313-1.605V3.676h1.275v5.236c0,1.146-0.154,2.029-0.465,2.646c-0.568,1.126-1.643,1.689-3.223,1.689s-2.652-0.563-3.217-1.689c-0.31-0.617-0.465-1.5-0.465-2.646V3.676H17.987z";
 
@@ -694,7 +688,63 @@ function drawAuxiliary(data){
     auxiliary_set[current_auxiliary].attr(auxiliary_selected_attr);
     var msg = auxiliary_set[current_auxiliary].data('name');
     message(msg);
-    return true;
+   var k = auxiliary_set[current_auxiliary].data("key");
+    x0 = auxiliary_datas[k]["x0"] * map.scale_x;
+    y0 = auxiliary_datas[k]["y0"] * map.scale_y;
+    x1 = auxiliary_datas[k]["x1"] * map.scale_x;
+    y1 = auxiliary_datas[k]["y1"] * map.scale_y;
+    x2 = auxiliary_datas[k]["x2"] * map.scale_x;
+    y2 = auxiliary_datas[k]["y2"] * map.scale_y;
+    x3 = auxiliary_datas[k]["x3"] * map.scale_x;
+    y3 = auxiliary_datas[k]["y3"] * map.scale_y;
+
+    auxiliary_controls = map.paper.set(
+	map.paper.circle(x0, y0, 5).attr(drag_point),
+	map.paper.circle(x1, y1, 5).attr(drag_point),
+	map.paper.circle(x2, y2, 5).attr(drag_point),
+	map.paper.circle(x3, y3, 5).attr(drag_point)
+    );
+    auxiliary_controls[0].update = function (x, y){     
+	var X = this.attr("cx") + x,
+        Y = this.attr("cy") + y;
+	var k = auxiliary_set[current_auxiliary].data("key");
+	auxiliary_datas[k]["x0"] = X /  map.scale_x;
+	auxiliary_datas[k]["y0"] = Y / map.scale_y;
+        this.attr({cx: X, cy: Y});
+	update_auxiliary(k);
+     };
+    auxiliary_controls[1].update = function (x, y){     
+	var X = this.attr("cx") + x,
+        Y = this.attr("cy") + y;
+	var k = auxiliary_set[current_auxiliary].data("key");
+	auxiliary_datas[k]["x1"] = X /  map.scale_x;
+	auxiliary_datas[k]["y1"] = Y / map.scale_y;
+        this.attr({cx: X, cy: Y});
+	update_auxiliary(k);
+    };
+
+    auxiliary_controls[2].update = function (x, y){     
+	var X = this.attr("cx") + x,
+        Y = this.attr("cy") + y;
+	var k = auxiliary_set[current_auxiliary].data("key");
+	auxiliary_datas[k]["x2"] = X /  map.scale_x;
+	auxiliary_datas[k]["y2"] = Y / map.scale_y;
+        this.attr({cx: X, cy: Y});
+	update_auxiliary(k);
+     };
+    auxiliary_controls[3].update = function (x, y){     
+	var X = this.attr("cx") + x,
+        Y = this.attr("cy") + y;
+	var k = auxiliary_set[current_auxiliary].data("key");
+	auxiliary_datas[k]["x3"] = X /  map.scale_x;
+	auxiliary_datas[k]["y3"] = Y / map.scale_y;
+        this.attr({cx: X, cy: Y});
+	update_auxiliary(k);
+    };
+
+    auxiliary_controls.drag(move, up);
+ 
+     return true;
 };
 
 function handle_move_aux_update(event) {
@@ -712,15 +762,56 @@ function handle_move_aux_next(event) {
     var msg = auxiliary_set[current_auxiliary].data('name');
     message("Name: " + msg);
 
-  
+    var k = auxiliary_set[current_auxiliary].data("key");
+    
+    cx = auxiliary_datas[k]["x0"] * map.scale_x;
+    cy = auxiliary_datas[k]["y0"] * map.scale_y;
+    auxiliary_controls[0].attr({"cx" : cx , "cy" : cy});
+
+    cx = auxiliary_datas[k]["x1"] * map.scale_x;
+    cy = auxiliary_datas[k]["y1"] * map.scale_y;
+    auxiliary_controls[1].attr({"cx" : cx , "cy" : cy});
+
+    cx = auxiliary_datas[k]["x2"] * map.scale_x;
+    cy = auxiliary_datas[k]["y2"] * map.scale_y;
+    auxiliary_controls[2].attr({"cx" : cx , "cy" : cy});
+
+    cx = auxiliary_datas[k]["x3"] * map.scale_x;
+    cy = auxiliary_datas[k]["y3"] * map.scale_y;
+    auxiliary_controls[3].attr({"cx" : cx , "cy" : cy});
+
     return false;
 };
 
 function handle_move_aux_back(event) {
     auxiliary_set.attr(auxiliary_attr);
     set_system_state('Ready');
-    return false;
+    auxiliary_controls[0].remove();
+    auxiliary_controls[1].remove();
+    auxiliary_controls[2].remove();
+    auxiliary_controls[3].remove();
+ 
+    delete auxiliary_controls;
+ return false;
 }  
+function update_auxiliary(k){
+    var value = auxiliary_datas[k];
+    var x0 = value['x0'] * map.scale_x;
+    var y0 = value['y0'] * map.scale_y;
+    var x1 = value['x1'] * map.scale_x;
+    var y1 = value['y1'] * map.scale_y;
+    var x2 = value['x2'] * map.scale_x;
+    var y2 = value['y2'] * map.scale_y;
+    var x3 = value['x3'] * map.scale_x;
+    var y3 = value['y3'] * map.scale_y;
+
+    var path  = "M" + x0 + "," + y0 ; 
+    path += "L" + x1 + "," + y1 ; 
+    path += "L" + x2 + "," + y2 ; 
+    path += "L" + x3 + "," + y3 ; 
+    path += "Z";
+    auxiliary_set[current_auxiliary].attr({path:path});
+}
 
 
 
