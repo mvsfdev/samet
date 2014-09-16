@@ -213,7 +213,7 @@ class Root(object):
         if self.www_table is not None:
             self.segments = self.www_table.getSegments() 
             self.auxiliaries = self.www_table.getAuxiliaries() 
-            #self.devices = self.www_table.getDevices()
+            self.devices = self.www_table.getDevices()
             self.relays = self.www_table.getRelays()
             self.alarm_tags = self.www_table.getTags()
 
@@ -627,7 +627,34 @@ class Root(object):
         main_page = self.temp_setup.render(title='SAM Engineer Tools')
         return main_page
 
+    @cherrypy.expose
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def putSegments(self):
+        result = {"operation": "request", "result": "success"}
 
+        segs = cherrypy.request.json
+        self.segments = segs
+        return result
+
+
+    @cherrypy.expose
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def putDevices(self):
+        result = {"operation": "request", "result": "success"}
+
+        self.devices = cherrypy.request.json
+        return result
+
+    @cherrypy.expose
+    @cherrypy.tools.json_in()
+    @cherrypy.tools.json_out()
+    def putAuxiliaries(self):
+        result = {"operation": "request", "result": "success"}
+
+        self.auxiliaries = cherrypy.request.json
+        return result
 
 
 
