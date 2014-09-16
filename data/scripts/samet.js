@@ -16,7 +16,6 @@ var system_state = 0;
 var map = new Object();
 //paper = Raphael("canvas",100,100);
 
-
 function initialize(){
     /// Canvas variable
     map.width = $('#canvas').width();
@@ -28,7 +27,7 @@ function initialize(){
     map.scale_y = map.height / 1022;  
 
     set_system_state('Ready');
-   
+    
     return false; 
 };
 
@@ -36,11 +35,11 @@ function move(dx, dy) {
     this.update(dx - (this.dx || 0), dy - (this.dy || 0));
     this.dx = dx;
     this.dy = dy;
-}
+};
+
 function up() {
     this.dx = this.dy = 0;
-}
-
+};
 
 function clear_path(setx) {
     var il = setx.length;
@@ -54,8 +53,6 @@ function message(mesg) {
     $('#message_box').text(mesg);
 }
 
-
-
 var dispatch = {
     'Ready'       :    {'LT': '设置',   'L' : handle_install,
                         'MT': '摆放',     'M' : handle_set,
@@ -64,7 +61,7 @@ var dispatch = {
 };    
 
 function set_system_state(state) {
-     if (system_state == state) {
+    if (system_state == state) {
         return false;
     }
     system_state = state;
@@ -89,7 +86,6 @@ function set_system_state(state) {
 	//        };
     };
 };
-
 
 function handle_install(event) {
     set_system_state('Install');
@@ -119,16 +115,14 @@ var drag_point = { "fill" : "yellow",
 		   "stroke-width": 2,
 		 }; 
 var drag_point_end = { "fill" : "blue",
-		   "stroke" : "red",
-		   "stroke-width": 2,
-		 }; 
+		       "stroke" : "red",
+		       "stroke-width": 2,
+		     }; 
 
 dispatch['Install'] = {'LT': '地图',      'L' : handle_install_from_map,
                        'MT': '读PM',     'M' : handle_install_readPM,
                        'RT': '返回',     'R' : handle_install_back,
                        'MSG': '参数设置模式......'};
-
-
 
 function handle_install_from_map(event) {
     $('#message_box').text('map');
@@ -152,24 +146,25 @@ function handle_install_back(event) {
  * 
  ***********************************************************************************************/
 
+function put_sda(url,argx){
+    var arg = JSON.stringify(argx);
+    console.log(arg);
+    $.ajax({url:url,
+            data: arg,
+            type: 'POST',
+            contentType: 'application/json',
+            processData: false,
+            dataType: "json",
+            success: function(data) {console.log(data["result"]);},
+           });
+
+};
+
+
 dispatch['Movement'] = {'LT': '电缆',      'L' : handle_move_cable,
 			'MT': '设备',      'M' : handle_move_module,
 			'RT': '传感器',    'R' : handle_move_aux,
 			'MSG': '参数设置模式......'};
-
-
-function get_display_segment() {
-    $.get( "getDisplaySegment",
-           { seg_no: 1},
-           function(data) {
-               segment_datas = data;
-               drawSegment(data);
-               //isAjaxFinished = true;
-           }
-         );
-}; 
-
-
 
 function handle_move_cable(event) {
     set_system_state('Cable'); 
@@ -182,14 +177,13 @@ function handle_move_module(event) {
     set_system_state('Module'); 
     get_device();
     //drawModule(module_datas);
-
     return false;
 };
 
 function handle_move_aux(event) {
     set_system_state('Aux');
-
-    drawAuxiliary(auxiliary_datas);
+    get_auxiliary();
+    //drawAuxiliary(auxiliary_datas);
 
     return false;
 };
@@ -210,32 +204,32 @@ var segment_attr = { "stroke" : "green",
                      "stroke-width" : 5,
 		     "fill" : "green",
 		     "fill-opacity" : 1
-		    };
+		   };
 
 var segment_selected_attr = { "stroke" : "red",
 			      "stroke-width" : 5,
 			      "fill" : "red",
 			      "fill-opacity" : 1
-			     };
+			    };
 
 var segment_datas = {
-   "segment1" :{'x0' : 100,
-		'y0' : 100,
-		'x1' : 100,
-		'y1' : 200,
-		'id' : 1,
-		'name' : 'segment1',
-		'type' : "seg"
-	       },
+    "segment1" :{'x0' : 100,
+		 'y0' : 100,
+		 'x1' : 100,
+		 'y1' : 200,
+		 'id' : 1,
+		 'name' : 'segment1',
+		 'type' : "seg"
+		},
 
-   "segment2" :{'x0' : 200,
-		'y0' : 200,
-		'x1' : 200,
-		'y1' : 400,
-		'id' : 2,
-		'name' : 'segment2',
-		'type' : 'seg'
-	       },
+    "segment2" :{'x0' : 200,
+		 'y0' : 200,
+		 'x1' : 200,
+		 'y1' : 400,
+		 'id' : 2,
+		 'name' : 'segment2',
+		 'type' : 'seg'
+		},
 
 };
 var segment_set = 0;
@@ -300,7 +294,7 @@ function drawSegment(data){
 	segment_datas[k]["y0"] = Y / map.scale_y;
         this.attr({cx: X, cy: Y});
 	update_segment(k);
-     };
+    };
     segment_controls[1].update = function (x, y){     
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
@@ -312,14 +306,18 @@ function drawSegment(data){
     };
 
     segment_controls.drag(move, up);
- 
+    
     return true;
 };
 
 function handle_move_segment_update(event) {
     $('#message_box').text('Segment Placement');
+    put_sda("putSegments",segment_datas);
     return false;
 };
+
+
+
 
 function handle_move_segment_next(event) {
     segment_set[current_segment].attr(segment_attr);
@@ -345,6 +343,7 @@ function handle_move_segment_next(event) {
 };
 
 function handle_move_segment_back(event) {
+    put_sda("putSegments",segment_datas);
     segment_set.attr(segment_attr);
     segment_controls[0].remove();
     segment_controls[1].remove();
@@ -354,15 +353,46 @@ function handle_move_segment_back(event) {
 }  
 
 function update_segment(k){
-	var value = segment_datas[k];
-        var x0 = value['x0'] * map.scale_x;
-        var y0 = value['y0'] * map.scale_y;
-        var x1 = value['x1'] * map.scale_x;
-        var y1 = value['y1'] * map.scale_y;
-        var path  = "M" + x0 + "," + y0 ; 
-        path += "L" + x1 + "," + y1 ; 
-	segment_set[current_segment].attr({path:path});
+    var value = segment_datas[k];
+    var x0 = value['x0'] * map.scale_x;
+    var y0 = value['y0'] * map.scale_y;
+    var x1 = value['x1'] * map.scale_x;
+    var y1 = value['y1'] * map.scale_y;
+    var path  = "M" + x0 + "," + y0 ; 
+    path += "L" + x1 + "," + y1 ; 
+    segment_set[current_segment].attr({path:path});
 }
+
+
+/*
+*
+*  Ajax function zone
+*
+*/
+function get_display_segment() {
+    $.get( "getDisplaySegment",
+           { seg_no: 1},
+           function(data) {
+               segment_datas = data;
+               drawSegment(data);
+               //isAjaxFinished = true;
+           }
+         );
+}; 
+
+
+function put_segments(segments) {
+    var arg = JSON.stringify(segments);
+    console.log(arg);
+    $.ajax({url:"putSegments",
+            data: arg,
+            type: 'POST',
+            contentType: 'application/json',
+            processData: false,
+            dataType: "json",
+            success: function(data) {console.log(data["result"]);},
+           });
+}; 
 
 /***********************************************************************************************
  *
@@ -381,7 +411,7 @@ var icon_PM ="M7.361,3.676h4.173c0.825,0,1.491,0.233,1.998,0.701s0.761,1.124,0.7
 icon_PM += "M15.879,3.676h1.81l2.681,7.883l2.663-7.883h1.797V13h-1.207V7.496c0-0.189,0.005-0.505,0.014-0.945c0.008-0.44,0.012-0.912,0.012-1.416L20.986,13h-1.252l-2.687-7.865v0.286c0,0.229,0.006,0.576,0.019,1.044s0.019,0.812,0.019,1.031V13h-1.206V3.676z";
 var icon_LU ="M8.681,3.676h1.263v8.213h4.678V13H8.681V3.676z";
 icon_LU += "M17.276,3.676v5.764c0,0.677,0.128,1.239,0.384,1.688c0.38,0.678,1.02,1.016,1.919,1.016c1.079,0,1.813-0.365,2.201-1.098c0.209-0.397,0.313-0.934,0.313-1.605V3.676h1.275v5.236c0,1.146-0.154,2.029-0.465,2.646c-0.568,1.126-1.643,1.689-3.223,1.689c-1.58,0-2.652-0.563-3.217-1.689C16.155,10.941,16,10.059,16,8.912V3.676H17.276z";
- 
+
 var icon_TU = "M15.46,3.676v1.11h-3.142V13h-1.276V4.786H7.9v-1.11H15.46z";
 icon_TU += "M17.987,3.676v5.764c0,0.677,0.128,1.239,0.384,1.688c0.379,0.678,1.02,1.016,1.919,1.016c1.079,0,1.813-0.365,2.201-1.098c0.209-0.397,0.313-0.934,0.313-1.605V3.676h1.275v5.236c0,1.146-0.154,2.029-0.465,2.646c-0.568,1.126-1.643,1.689-3.223,1.689s-2.652-0.563-3.217-1.689c-0.31-0.617-0.465-1.5-0.465-2.646V3.676H17.987z";
 
@@ -405,7 +435,7 @@ var module_text_attr =  {"stroke" : "black",
 			 "fill" : "black",
 			 "fill-opacity" : 1
 			};
- 
+
 
 var module_datas = {
     'RM2': { 'x0' : 700,
@@ -530,6 +560,7 @@ function drawModule(data){
 };
 
 function handle_move_module_update(event) {
+    put_sda("putDevices",module_datas);
     $('#message_box').text('Module Placement');
     return false;
 };
@@ -552,25 +583,13 @@ function handle_move_module_next(event) {
     return false;
 };
 
-
-
-//function meijing_selectedDevice(device_set){
-//console.log(device_set);
-//console.log("ID  " + device_set.module_datas);
-//console.log("x0  " + device_set.module_datas);
-
-
-
-
-
 function handle_move_module_back(event) {
+    put_sda("putDevices",module_datas);
     device_set.attr(module_attr);
     device_controls.remove();
     set_system_state('Ready');
     return false;
 }  
-
-
 
 /**
  *  AJAX Function zone
@@ -585,6 +604,7 @@ function get_device() {
           }
          );
 }; 
+
 
 
 
@@ -683,7 +703,6 @@ function drawAuxiliary(data){
     }
     auxiliary_set_length = 0;
 
-
     $.each(data, function(name,value) {
         x0 = value['x0'] * map.scale_x;
         y0 = value['y0'] * map.scale_y;
@@ -719,7 +738,7 @@ function drawAuxiliary(data){
     auxiliary_set[current_auxiliary].attr(auxiliary_selected_attr);
     var msg = auxiliary_set[current_auxiliary].data('name');
     message(msg);
-   var k = auxiliary_set[current_auxiliary].data("key");
+    var k = auxiliary_set[current_auxiliary].data("key");
     x0 = auxiliary_datas[k]["x0"] * map.scale_x;
     y0 = auxiliary_datas[k]["y0"] * map.scale_y;
     x1 = auxiliary_datas[k]["x1"] * map.scale_x;
@@ -743,7 +762,7 @@ function drawAuxiliary(data){
 	auxiliary_datas[k]["y0"] = Y / map.scale_y;
         this.attr({cx: X, cy: Y});
 	update_auxiliary(k);
-     };
+    };
     auxiliary_controls[1].update = function (x, y){     
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
@@ -762,7 +781,7 @@ function drawAuxiliary(data){
 	auxiliary_datas[k]["y2"] = Y / map.scale_y;
         this.attr({cx: X, cy: Y});
 	update_auxiliary(k);
-     };
+    };
     auxiliary_controls[3].update = function (x, y){     
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
@@ -774,11 +793,12 @@ function drawAuxiliary(data){
     };
 
     auxiliary_controls.drag(move, up);
- 
-     return true;
+    
+    return true;
 };
 
 function handle_move_aux_update(event) {
+    put_sda("putAuxiliaries",auxiliary_datas);
     $('#message_box').text('Auxiliary Placement');
     return false;
 };
@@ -815,16 +835,18 @@ function handle_move_aux_next(event) {
 };
 
 function handle_move_aux_back(event) {
+    put_sda("putAuxiliaries",auxiliary_datas);
     auxiliary_set.attr(auxiliary_attr);
     set_system_state('Ready');
     auxiliary_controls[0].remove();
     auxiliary_controls[1].remove();
     auxiliary_controls[2].remove();
     auxiliary_controls[3].remove();
- 
+    
     delete auxiliary_controls;
- return false;
+    return false;
 }  
+
 function update_auxiliary(k){
     var value = auxiliary_datas[k];
     var x0 = value['x0'] * map.scale_x;
@@ -845,8 +867,19 @@ function update_auxiliary(k){
 }
 
 
-
-
+/**
+ *  AJAX Function zone
+ *
+ */
+function get_auxiliary() {
+    $.get("getAuxiliaries",
+          {aux_no: 1},
+          function(data) {
+              auxiliary_datas = data;
+              drawAuxiliary(data);
+          }
+         );
+}; 
 
 /***********************************************************************************************
  *
@@ -859,11 +892,7 @@ dispatch['parament'] = {'LT': '导入',      'L' : handle_parament_import,
 			'RT': '返回',     'R' : handle_parament_back,
 			'MSG': '参数设置模式......'};
 
-
-
-
 function handle_parament_import(event) {
-    console.log("XXXX   "+event.pageX + "   YYY "+  event.pageY);
     $('#message_box').text('导入');
     return false;
 };
@@ -877,9 +906,6 @@ function handle_parament_back(Event) {
     set_system_state('Ready');
     return false;
 };
-
-
-
 
 ///////////////////////////////////////////////////// Only Test !!!!!!!!!!!!!!
 
@@ -895,12 +921,12 @@ function handle_parament_back(Event) {
 
 
 
- 
 
- 
 
- 
 
- 
 
-  
+
+
+
+
+

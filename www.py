@@ -492,24 +492,24 @@ class Root(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def getDevices(self,dev_no):
-        for key,value in self.devices.items():
-            d_id = value['id']
-            d_type = value['type']
-            d_state = value['status']
-            d_name = value['name']
-            stx = self.pm_line.getDeviceState(dev_id = d_id,dev_type=d_type)
-            if (stx == 'Com Fail') or (stx is None):
-                state = 2
-                info = (u'[%s]: 通讯失败' % (d_name))
-            elif stx == 'Tamper':
-                state = 1
-                info = (u'[%s]: 防拆开关打开' % (d_name))
-            else:
-                state = 0
-                info = (u'[%s]: 工作正常' % (d_name))
-            if d_state != state:
-                self.devices[key]['status'] = state
-                self._writeSystemRecord(info = info)
+        # for key,value in self.devices.items():
+        #     d_id = value['id']
+        #     d_type = value['type']
+        #     d_state = value['status']
+        #     d_name = value['name']
+        #     stx = self.pm_line.getDeviceState(dev_id = d_id,dev_type=d_type)
+        #     if (stx == 'Com Fail') or (stx is None):
+        #         state = 2
+        #         info = (u'[%s]: 通讯失败' % (d_name))
+        #     elif stx == 'Tamper':
+        #         state = 1
+        #         info = (u'[%s]: 防拆开关打开' % (d_name))
+        #     else:
+        #         state = 0
+        #         info = (u'[%s]: 工作正常' % (d_name))
+        #     if d_state != state:
+        #         self.devices[key]['status'] = state
+        #         self._writeSystemRecord(info = info)
 
         message = self.devices or {}
         return message
