@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--
+ ! Excerpted from "HTML5 and CSS3",
+ ! published by The Pragmatic Bookshelf.
+ ! Copyrights apply to this code. It may not be used to create training material, 
+ ! courses, books, articles, and the like. Contact us if you are in doubt.
+ ! We make no guarantees that this code is fit for any purpose. 
+ ! Visit http://www.pragmaticprogrammer.com/titles/bhh5 for more book information.
+-->
+<html lang="utf-8">
+  <head>
+    <title>${title}</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <link rel="stylesheet" href="css/jquery.dataTables.min.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="css/dataTables.tableTools.min.css" type="text/css" media="screen">
+    <script type="text/javascript" src="js/jquery.min.js" ></script>
+    <script type="text/javascript" src="js/jquery.dataTables.min.js" ></script>
+    <script type="text/javascript" src="js/dataTables.tableTools.min.js" ></script>
+    <script type="text/javascript" src="js/logs.js" ></script>
+
+  </head>
+  
+  <body>
+    <h2> ${title} </h2>
+    <table id="logs" class="display" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+	  % for head in heads:
+          <th>${head}</th>
+	  % endfor
+        </tr>
+      </thead>
+      
+
+      <tfoot>
+        <tr>
+	  % for head in heads:
+          <th>${head}</th>
+	  % endfor
+        </tr>
+      </tfoot>
+      
+    </table>
+    <a href="../index">Return Map</a>
+  </body>
+</html>
+

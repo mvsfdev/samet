@@ -110,3 +110,23 @@ body{
     display: none;
 }
 
+form {
+    height: 100%;
+    width: 50%;
+    background-color: gray;
+    border:1px solid silver;
+}
+
+form,input {
+    height: 100%;
+    width: 30%;
+    background-color: gray;
+    border:1px solid silver;
+}
+
+form,input.submit {
+    height: 100%;
+    width: 30%;
+    background-color: gray;
+    border:1px solid silver;
+}

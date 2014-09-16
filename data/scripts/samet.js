@@ -158,18 +158,30 @@ dispatch['Movement'] = {'LT': '电缆',      'L' : handle_move_cable,
 			'MSG': '参数设置模式......'};
 
 
+function get_display_segment() {
+    $.get( "getDisplaySegment",
+           { seg_no: 1},
+           function(data) {
+               segment_datas = data;
+               drawSegment(data);
+               //isAjaxFinished = true;
+           }
+         );
+}; 
+
+
 
 function handle_move_cable(event) {
     set_system_state('Cable'); 
-
-    drawSegment(segment_datas);
+    get_display_segment();
+    //drawSegment(segment_datas);
     return false;
 };
 
 function handle_move_module(event) {
     set_system_state('Module'); 
-
-    drawModule(module_datas);
+    get_device();
+    //drawModule(module_datas);
 
     return false;
 };
@@ -557,6 +569,25 @@ function handle_move_module_back(event) {
     set_system_state('Ready');
     return false;
 }  
+
+
+
+/**
+ *  AJAX Function zone
+ *
+ */
+function get_device() {
+    $.get("getDevices",
+          {dev_no: 1},
+          function(data) {
+              module_datas = data;
+              drawModule(data);
+          }
+         );
+}; 
+
+
+
 
 /***********************************************************************************************
  *

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>SAM Engineer Tool</title>
+    <title>${title}</title>
     <meta charset="utf-8">
-    <link href="css/samet.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="js/jquery.js" ></script>
-    <script type="text/javascript" src="js/raphael.js" ></script>
-    <script type="text/javascript" src="js/samet.js" ></script>
+    <link href="css/pigcm.min.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="js/jquery.min.js" ></script>
+    <script type="text/javascript" src="js/raphael.min.js" ></script>
+    <script type="text/javascript" src="js/pigcm.min.js" ></script>
   </head>
 
   <body ondragstart="window.event.returnValue=false"
@@ -16,48 +16,48 @@
     <div id="desktop">
       <div id="canvas"></div>
       
-      <!--div id="tag_box">
+      <div id="tag_box">
         <table id="tag_table">
           ${makeTag(tags)}
         </table>
         <table id="relay_table">
           ${makeRelay(relays)}
         </table>
-      </div-->      
+      </div>      
       <div id="message_box">
       </div>
+      <!--p id="message_box">
+      </p-->
+      
       <div id="button_box">
-        <button id=left_btn class="msg_btn">左</button>
-        <button id=mid_btn class="msg_btn">中</button>
-        <button id=right_btn class="msg_btn">右</button>
-        <!--  ${makeButton(btns)}  -->
+        ${makeButton(btns)}
       </div>
     </div>
-    <!--audio id="alarm_sound">
+    <audio id="alarm_sound">
       <source src="media/BurglarAlarm.mp3">
-    </audio-->
+    </audio>
   </body>
 </html>
 
-<!--%def name="makeTag(row)">
+<%def name="makeTag(row)">
     <tr>
     % for id,name in row:
         <td id=${id}>${name}</td>\
     % endfor
     </tr>
-</%def-->
+</%def>
 
-<!--%def name="makeButton(btns)">
+<%def name="makeButton(btns)">
     % for id,btn in btns:
        <button id=${id} class="msg_btn">${btn}</button>
     % endfor
-</%def-->
+</%def>
 
-<!--%def name="makeRelay(relays)">
+<%def name="makeRelay(relays)">
     <tr>
     % for id,myclass,name in relays:
         <td id=${id} class=${myclass}>${name}</td>\
     % endfor
     </tr>
-</%def-->
+</%def>
 
