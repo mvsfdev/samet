@@ -51,6 +51,7 @@ function clear_path(setx) {
 
 function message(mesg) {
     $('#message_box').text(mesg);
+    $('#write').val(mesg);
 }
 
 var dispatch = {
@@ -80,10 +81,7 @@ function set_system_state(state) {
         $('#right_btn').unbind();
         $('#right_btn').bind('click',{},Handler['R']);
         
-	//        if (system_state == 'Ready') {
-        //$('#message_box').text('当前无新的报警');
-        $('#message_box').text(Handler['MSG']);
-	//        };
+	message(Handler['MSG']);
     };
 };
 
@@ -94,7 +92,6 @@ function handle_install(event) {
 
 function handle_set(event) {
     set_system_state('Movement');
-    //  $('#message_box').text('set');
     return false;
 };
 
@@ -125,7 +122,7 @@ dispatch['Install'] = {'LT': '地图',      'L' : handle_install_from_map,
                        'MSG': '参数设置模式......'};
 
 function handle_install_from_map(event) {
-    $('#message_box').text('map');
+    message('map');
     return false;
 };
 
@@ -169,22 +166,18 @@ dispatch['Movement'] = {'LT': '电缆',      'L' : handle_move_cable,
 function handle_move_cable(event) {
     set_system_state('Cable'); 
     get_display_segment();
-    //drawSegment(segment_datas);
     return false;
 };
 
 function handle_move_module(event) {
     set_system_state('Module'); 
     get_device();
-    //drawModule(module_datas);
     return false;
 };
 
 function handle_move_aux(event) {
     set_system_state('Aux');
     get_auxiliary();
-    //drawAuxiliary(auxiliary_datas);
-
     return false;
 };
 
@@ -230,7 +223,8 @@ var segment_datas = {
 		 'y1' : 200,
 		 'id' : 1,
 		 'name' : 'segment1',
-		 'type' : "seg"
+		 'type' : "seg",
+		 'comment' : 'Seg_1'
 		},
 
     "segment2" :{'x0' : 200,
@@ -239,7 +233,8 @@ var segment_datas = {
 		 'y1' : 400,
 		 'id' : 2,
 		 'name' : 'segment2',
-		 'type' : 'seg'
+		 'type' : 'seg',
+		 'comment' : 'Seg_2'
 		},
 
 };
@@ -324,8 +319,6 @@ function drawSegment(data){
 
 function click_seg(event){
     segment_set[current_segment].attr(segment_attr);
-    
-    $('#message_box').text("name: " +this.data("index"));
     current_segment = this.data("index");
     select_segment();
     return false;
@@ -334,8 +327,7 @@ function click_seg(event){
 function select_segment(){
     segment_set[current_segment].attr(segment_selected_attr);
     var msg = segment_set[current_segment].data('name');
-    message("Name: " + msg);
-
+    message(msg);
     var k = segment_set[current_segment].data("key");
     
     cx = segment_datas[k]["x0"] * map.scale_x;
@@ -348,13 +340,12 @@ function select_segment(){
 };
 
 function handle_move_segment_update(event) {
-    $('#message_box').text('Segment Placement');
+
+    var k = segment_set[current_segment].data("key");
+    segment_datas[k]['name'] = $('#write').val();
     put_sda("putSegments",segment_datas);
     return false;
 };
-
-
-
 
 function handle_move_segment_next(event) {
     segment_set[current_segment].attr(segment_attr);
@@ -564,7 +555,7 @@ function drawModule(data){
     current_device = 0;
     device_set[current_device].attr(module_selected_attr);
     var msg = device_set[current_device].data('name');
-    message("Name: " + msg);
+    message(msg);
 
     var k = device_set[current_device].data("key");
     x0 = module_datas[k]["x0"] * map.scale_x;
@@ -582,14 +573,12 @@ function drawModule(data){
     };
 
     device_controls.drag(move, up);
-
     device_set.click(click_dev);
     return true;
 };
 
 function click_dev(event){
     device_set[current_device].attr(module_attr);
-    $('#message_box').text("name: " +this.data("index"));
     current_device = this.data("index");
     select_device();
     return false;
@@ -598,7 +587,8 @@ function click_dev(event){
 function select_device(){
     device_set[current_device].attr(module_selected_attr);
     var msg = device_set[current_device].data('name');
-    message("Name: " + msg);
+    message(msg);
+
     var k = device_set[current_device].data("key");
     
     cx = module_datas[k]["x0"] * map.scale_x;
@@ -609,8 +599,10 @@ function select_device(){
 };
 
 function handle_move_module_update(event) {
+    var k = device_set[current_device].data("key");
+    module_datas[k]['name'] = $('#write').val();
     put_sda("putDevices",module_datas);
-    $('#message_box').text('Module Placement');
+    message('Module Placement');
     return false;
 };
 
@@ -840,7 +832,6 @@ function drawAuxiliary(data){
 
 function click_aux(event){
     auxiliary_set[current_auxiliary].attr(auxiliary_attr);
-    $('#message_box').text("name: " +this.data("index"));
     current_auxiliary = this.data("index");
     select_auxiliary();
     return false;
@@ -850,7 +841,7 @@ function click_aux(event){
 function select_auxiliary(){
     auxiliary_set[current_auxiliary].attr(auxiliary_selected_attr);
     var msg = auxiliary_set[current_auxiliary].data('name');
-    message("Name: " + msg);
+    message(msg);
 
     var k = auxiliary_set[current_auxiliary].data("key");
     
@@ -874,8 +865,10 @@ function select_auxiliary(){
 };
 
 function handle_move_aux_update(event) {
+    var k = auxiliary_set[current_auxiliary].data("key");
+    auxiliary_datas[k]['name'] = $('#write').val();
     put_sda("putAuxiliaries",auxiliary_datas);
-    $('#message_box').text('Auxiliary Placement');
+    message('Auxiliary Placement');
     return false;
 };
 
@@ -948,12 +941,12 @@ dispatch['parament'] = {'LT': '导入',      'L' : handle_parament_import,
 			'MSG': '参数设置模式......'};
 
 function handle_parament_import(event) {
-    $('#message_box').text('导入');
+    message('导入');
     return false;
 };
 
 function handle_parament_export(event) {
-    $('#message_box').text('导出');
+    message('导出');
     return false;
 };
 
