@@ -194,6 +194,17 @@ function handle_move_aux(event) {
  *   Cable
  * 
  ***********************************************************************************************/
+var drag_seg_point = { "fill" : "yellow",
+		   "stroke" : "red",
+		   "stroke-width": 2,
+		   "title" : "起点",
+		 }; 
+var drag_seg_point_end = { "fill" : "blue",
+		       "stroke" : "red",
+		       "title" : "终点",
+		       "stroke-width": 2,
+		     }; 
+
 dispatch['Cable'] = {'LT': '提交',      'L' : handle_move_segment_update,
 		     'MT': '下一个',     'M' : handle_move_segment_next,
 		     'RT': '返回',     'R' : handle_move_segment_back,
@@ -262,6 +273,7 @@ function drawSegment(data){
         line.data('key',name);
         line.data('id',value['id']);
         line.data('name',value['name']);
+	line.data('index',segment_set_length);
 
         line.attr({'title': value['name']});
         segment_set.push(line);
@@ -283,8 +295,8 @@ function drawSegment(data){
     y1 = segment_datas[k]["y1"] * map.scale_y;
 
     segment_controls = map.paper.set(
-	map.paper.circle(x0, y0, 5).attr(drag_point),
-	map.paper.circle(x1, y1, 5).attr(drag_point_end)
+	map.paper.circle(x0, y0, 5).attr(drag_seg_point),
+	map.paper.circle(x1, y1, 5).attr(drag_seg_point_end)
     );
     segment_controls[0].update = function (x, y){     
 	var X = this.attr("cx") + x,
@@ -306,8 +318,33 @@ function drawSegment(data){
     };
 
     segment_controls.drag(move, up);
-    
+    segment_set.click(click_seg);    
     return true;
+};
+
+function click_seg(event){
+    segment_set[current_segment].attr(segment_attr);
+    
+    $('#message_box').text("name: " +this.data("index"));
+    current_segment = this.data("index");
+    select_segment();
+    return false;
+
+};
+function select_segment(){
+    segment_set[current_segment].attr(segment_selected_attr);
+    var msg = segment_set[current_segment].data('name');
+    message("Name: " + msg);
+
+    var k = segment_set[current_segment].data("key");
+    
+    cx = segment_datas[k]["x0"] * map.scale_x;
+    cy = segment_datas[k]["y0"] * map.scale_y;
+    segment_controls[0].attr({"cx" : cx , "cy" : cy});
+
+    cx = segment_datas[k]["x1"] * map.scale_x;
+    cy = segment_datas[k]["y1"] * map.scale_y;
+    segment_controls[1].attr({"cx" : cx , "cy" : cy});
 };
 
 function handle_move_segment_update(event) {
@@ -325,24 +362,12 @@ function handle_move_segment_next(event) {
     if (current_segment >= segment_set_length) {
 	current_segment = 0;
     }
-    segment_set[current_segment].attr(segment_selected_attr);
-    var msg = segment_set[current_segment].data('name');
-    message("Name: " + msg);
-
-    var k = segment_set[current_segment].data("key");
-    
-    cx = segment_datas[k]["x0"] * map.scale_x;
-    cy = segment_datas[k]["y0"] * map.scale_y;
-    segment_controls[0].attr({"cx" : cx , "cy" : cy});
-
-    cx = segment_datas[k]["x1"] * map.scale_x;
-    cy = segment_datas[k]["y1"] * map.scale_y;
-    segment_controls[1].attr({"cx" : cx , "cy" : cy});
-
+    select_segment();
     return false;
 };
 
 function handle_move_segment_back(event) {
+    segment_set.click(click_seg);    
     put_sda("putSegments",segment_datas);
     segment_set.attr(segment_attr);
     segment_controls[0].remove();
@@ -506,6 +531,7 @@ function drawModule(data){
         line.data('key',name);
         line.data('id',value['id']);
         line.data('name',value['name']);
+	line.data('index',device_set_length);
 
         line.attr({'title': value['name']});
         device_set.push(line);
@@ -538,7 +564,8 @@ function drawModule(data){
     current_device = 0;
     device_set[current_device].attr(module_selected_attr);
     var msg = device_set[current_device].data('name');
-    message(msg);
+    message("Name: " + msg);
+
     var k = device_set[current_device].data("key");
     x0 = module_datas[k]["x0"] * map.scale_x;
     y0 = module_datas[k]["y0"] * map.scale_y;
@@ -555,8 +582,30 @@ function drawModule(data){
     };
 
     device_controls.drag(move, up);
-    
+
+    device_set.click(click_dev);
     return true;
+};
+
+function click_dev(event){
+    device_set[current_device].attr(module_attr);
+    $('#message_box').text("name: " +this.data("index"));
+    current_device = this.data("index");
+    select_device();
+    return false;
+
+};
+function select_device(){
+    device_set[current_device].attr(module_selected_attr);
+    var msg = device_set[current_device].data('name');
+    message("Name: " + msg);
+    var k = device_set[current_device].data("key");
+    
+    cx = module_datas[k]["x0"] * map.scale_x;
+    cy = module_datas[k]["y0"] * map.scale_y;
+    device_controls.attr({"cx" : cx , "cy" : cy});
+
+    return false;
 };
 
 function handle_move_module_update(event) {
@@ -571,15 +620,7 @@ function handle_move_module_next(event) {
     if (current_device >= device_set_length) {
 	current_device = 0;
     }
-    device_set[current_device].attr(module_selected_attr);
-    var msg = device_set[current_device].data('name');
-    message("Name: " + msg);
-    var k = device_set[current_device].data("key");
-    
-    cx = module_datas[k]["x0"] * map.scale_x;
-    cy = module_datas[k]["y0"] * map.scale_y;
-    device_controls.attr({"cx" : cx , "cy" : cy});
-
+    select_device();
     return false;
 };
 
@@ -725,7 +766,7 @@ function drawAuxiliary(data){
         line.data('key',name);
         line.data('id',value['id']);
         line.data('name',value['name']);
-
+	line.data('index',auxiliary_set_length);
         line.attr({'title': value['name']});
         auxiliary_set.push(line);
         auxiliary_set_length += 1;
@@ -793,22 +834,20 @@ function drawAuxiliary(data){
     };
 
     auxiliary_controls.drag(move, up);
-    
+    auxiliary_set.click(click_aux);
     return true;
 };
 
-function handle_move_aux_update(event) {
-    put_sda("putAuxiliaries",auxiliary_datas);
-    $('#message_box').text('Auxiliary Placement');
+function click_aux(event){
+    auxiliary_set[current_auxiliary].attr(auxiliary_attr);
+    $('#message_box').text("name: " +this.data("index"));
+    current_auxiliary = this.data("index");
+    select_auxiliary();
     return false;
+
 };
 
-function handle_move_aux_next(event) {
-    auxiliary_set[current_auxiliary].attr(auxiliary_attr);
-    current_auxiliary++;
-    if (current_auxiliary >= auxiliary_set_length) {
-	current_auxiliary = 0;
-    }
+function select_auxiliary(){
     auxiliary_set[current_auxiliary].attr(auxiliary_selected_attr);
     var msg = auxiliary_set[current_auxiliary].data('name');
     message("Name: " + msg);
@@ -831,6 +870,22 @@ function handle_move_aux_next(event) {
     cy = auxiliary_datas[k]["y3"] * map.scale_y;
     auxiliary_controls[3].attr({"cx" : cx , "cy" : cy});
 
+    return false;
+};
+
+function handle_move_aux_update(event) {
+    put_sda("putAuxiliaries",auxiliary_datas);
+    $('#message_box').text('Auxiliary Placement');
+    return false;
+};
+
+function handle_move_aux_next(event) {
+    auxiliary_set[current_auxiliary].attr(auxiliary_attr);
+    current_auxiliary++;
+    if (current_auxiliary >= auxiliary_set_length) {
+	current_auxiliary = 0;
+    }
+    select_auxiliary();
     return false;
 };
 
