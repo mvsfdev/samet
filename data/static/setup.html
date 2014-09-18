@@ -10,12 +10,14 @@
     <script type="text/javascript" src="js/raphael.min.js" ></script>
     <script type="text/javascript" src="js/samet.js" ></script>
   </head>
-
   <!--body ondragstart="window.event.returnValue=false"
         oncontextmenu="window.event.returnValue=false"
         onselectstart="event.returnValue=false"-->
   <body>
-    <!--div id="desktop"-->
+
+    
+    
+  <!--div id="desktop"-->
       <div id="canvas"></div>
       <!--div id="tag_box">
 	<input id="write" name="textname" type="text" />
@@ -28,10 +30,34 @@
         <button id=right_btn class="msg_btn">Right</button>
       </div>
       <div id="dialog" title="Edit">
-        <form>
+        <form id="valid">
           <fieldset>
             <label for="name">Name</label>
             <input type="text" name="name" id="seg_name" value="" class="text ui-widget-content ui-corner-all">
+	    <label for="number">Owner PM</label>
+	    <select name="number" id="number">
+	      <option>1</option>
+	      <option selected="selected">2</option>
+	      <option>3</option>
+	      <option>4</option>
+	      <option>5</option>
+	      <option>6</option>
+	      <option>7</option>
+	      <option>8</option>
+	    </select>
+	    <label for="name">Cable</label>
+	    <select name="cable" id="cable">
+	      <option>Cable A</option>
+	      <option selected="selected">Cable B</option>
+	    </select>
+
+	    <p>
+	      <label for="amount">Subcell</label>
+	      <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+	    </p>
+	    <div id="slider-range"></div>
+	    <label for="name">Position</label>
+            <input type="text" name="name" id="seg_x0" value="From (100,100) to (200,100)" class="text ui-widget-content ui-corner-all"  readonly="readonly">
             <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
           </fieldset>
         </form>

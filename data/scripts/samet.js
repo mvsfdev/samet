@@ -211,7 +211,7 @@ var drag_seg_point_end = { "fill" : "blue",
 		       "stroke-width": 2,
 		     }; 
 
-dispatch['Cable'] = {'LT': '编辑',      'L' : handle_move_segment_update,
+dispatch['Cable'] = {'LT': '编辑',      'L' : handle_move_segment_edit,
 		     'MT': '下一个',     'M' : handle_move_segment_next,
 		     'RT': '返回',     'R' : handle_move_segment_back,
 		     'MSG': '参数设置模式......'};
@@ -352,31 +352,76 @@ function select_segment(){
     segment_controls[1].attr({"cx" : cx , "cy" : cy});
 };
 
-function handle_move_segment_update(event) {
+function handle_move_segment_edit(event) {
+
     $("#dialog").dialog({ autoOpen: false,
                           modal: true,
+			  width: 400,
                           buttons: { 
                               "Add": function() {
                               },
                               "Delete": function() {
+				  segment_set[current_segment].remove();
+				  handle_move_segment_next(event)
+                                  $(this).dialog('close');
                               },
                               Ok: function() {
+				  segment_valid();
                                   update_segment_info();
                                   $(this).dialog('close');
+
                               },
                               Cancel: function() {
                                   $(this).dialog('close');
                               }
                           },
                           open: function() {
+			      $( "#number" ).selectmenu();
+			      $( "#cable" ).selectmenu();
                               $('#seg_name').val(segment_set[current_segment].data('name'));
-                          }
+
+			      $(function() {
+				  $( "#slider-range" ).slider({
+				      range: true,
+				      min: 1,
+				      max: 200,
+				      values: [ 75, 100 ],
+				      slide: function( event, ui ) {
+					  $( "#amount" ).val( "From" + ui.values[ 0 ] + " to " + ui.values[ 1 ] );
+				      }
+				  });
+				  $( "#amount" ).val( "From" + $( "#slider-range" ).slider( "values", 0 ) +" to" + $( "#slider-range" ).slider( "values", 1 ) );
+			      });
+			      //formValid();
+			  }
                         });
     $("#dialog").dialog('open');
     var msg = segment_set[current_segment].data('name');
     message(msg);
     return false;
 };
+
+
+
+
+//function segment_valid(eventObj){
+//     if (document.forms["valid"]["quantity"].value >200 ||document.forms["valid"]["quantity"].value<1 ) {
+// 	alert("Limit 1-200");
+// 	if (eventObj.preventDefault){
+// 	    eventObj.preventDefault();
+// 	} else {
+// 	    window.event.returnValue = false;
+// 	}
+
+// 	return false;
+
+//     } else {
+	
+// 	return true;
+    
+//     } 
+
+// };
 
 function update_segment_info() {
     var name = $('#seg_name').val();
@@ -400,8 +445,8 @@ function handle_move_segment_next(event) {
 };
 
 function handle_move_segment_back(event) {
-    segment_set.click(click_seg);    
-    put_sda("putSegments",segment_datas);
+    //segment_set.click(click_seg);    
+    //put_sda("putSegments",segment_datas);
     segment_set.attr(segment_attr);
     segment_controls[0].remove();
     segment_controls[1].remove();
