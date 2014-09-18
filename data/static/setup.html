@@ -27,8 +27,14 @@
         <button id=mid_btn class="msg_btn">Mid</button>
         <button id=right_btn class="msg_btn">Right</button>
       </div>
-      <div id="dialog" title="Dialog Title">
-        <p>Please Input Name: <input id="seg_name" type="text" name="theName" /> </p>
+      <div id="dialog" title="Edit">
+        <form>
+          <fieldset>
+            <label for="name">Name</label>
+            <input type="text" name="name" id="seg_name" value="" class="text ui-widget-content ui-corner-all">
+            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+          </fieldset>
+        </form>
       </div>
     <!--/div-->
   </body>

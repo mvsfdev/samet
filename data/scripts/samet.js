@@ -356,13 +356,20 @@ function handle_move_segment_update(event) {
     $("#dialog").dialog({ autoOpen: false,
                           modal: true,
                           buttons: { 
-                              "OK": function() {
+                              "Add": function() {
+                              },
+                              "Delete": function() {
+                              },
+                              Ok: function() {
                                   update_segment_info();
                                   $(this).dialog('close');
                               },
-                              "Cancel": function() {
+                              Cancel: function() {
                                   $(this).dialog('close');
                               }
+                          },
+                          open: function() {
+                              $('#seg_name').val(segment_set[current_segment].data('name'));
                           }
                         });
     $("#dialog").dialog('open');

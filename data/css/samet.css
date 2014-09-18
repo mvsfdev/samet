@@ -110,27 +110,9 @@ body{
     display: none;
 }
 
-form {
-    height: 100%;
-    width: 50%;
-    background-color: gray;
-    border:1px solid silver;
-}
-
-form,input {
-    height: 100%;
-    width: 30%;
-    background-color: gray;
-    border:1px solid silver;
-}
-
-form,input.submit {
-    height: 100%;
-    width: 30%;
-    background-color: gray;
-    border:1px solid silver;
-}
-
-
-
+label, input { display:block; }
+input.text { margin-bottom:12px; width:95%; padding: .4em; }
+fieldset { padding:0; border:0; margin-top:25px; }
+.ui-dialog .ui-state-error { padding: .3em; }
+.validateTips { border: 1px solid transparent; padding: 0.3em; }
 
