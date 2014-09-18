@@ -3,21 +3,23 @@
   <head>
     <title>${title}</title>
     <meta charset="utf-8">
+    <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
     <link href="css/samet.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="js/jquery.min.js" ></script>
+    <script type="text/javascript" src="js/jquery.js" ></script>
+    <script type="text/javascript" src="js/jquery-ui.js" ></script>
     <script type="text/javascript" src="js/raphael.min.js" ></script>
     <script type="text/javascript" src="js/samet.js" ></script>
   </head>
 
-  <body ondragstart="window.event.returnValue=false"
+  <!--body ondragstart="window.event.returnValue=false"
         oncontextmenu="window.event.returnValue=false"
-        onselectstart="event.returnValue=false">
-
-    <div id="desktop">
+        onselectstart="event.returnValue=false"-->
+  <body>
+    <!--div id="desktop"-->
       <div id="canvas"></div>
-      <div id="tag_box">
+      <!--div id="tag_box">
 	<input id="write" name="textname" type="text" />
-      </div>
+      </div-->
       <div id="message_box">
       </div>
       <div id="button_box">
@@ -25,7 +27,10 @@
         <button id=mid_btn class="msg_btn">Mid</button>
         <button id=right_btn class="msg_btn">Right</button>
       </div>
-    </div>
+      <div id="dialog" title="Dialog Title">
+        <p>Please Input Name: <input type="text" name="theName" /> </p>
+      </div>
+    <!--/div-->
   </body>
 </html>
 

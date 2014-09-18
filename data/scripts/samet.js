@@ -51,7 +51,7 @@ function clear_path(setx) {
 
 function message(mesg) {
     $('#message_box').text(mesg);
-    $('#write').val(mesg);
+    //$('#write').val(mesg);
 }
 
 var dispatch = {
@@ -122,6 +122,8 @@ dispatch['Install'] = {'LT': '地图',      'L' : handle_install_from_map,
                        'MSG': '参数设置模式......'};
 
 function handle_install_from_map(event) {
+//    $("#dialog").dialog({ autoOpen: false });
+    $("#dialog").dialog();
     message('map');
     return false;
 };
