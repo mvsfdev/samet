@@ -122,9 +122,20 @@ dispatch['Install'] = {'LT': '地图',      'L' : handle_install_from_map,
                        'MSG': '参数设置模式......'};
 
 function handle_install_from_map(event) {
-//    $("#dialog").dialog({ autoOpen: false });
-    $("#dialog").dialog();
-    message('map');
+    $("#dialog").dialog({ autoOpen: false,
+                          modal: true,
+                          buttons: { 
+                              "OK": function() {
+                                  message($('#seg_name').val());
+                                  $(this).dialog('close');
+                              },
+                              "Cancel": function() {
+                                  $(this).dialog('close');
+                              }
+                          }
+                        });
+    $("#dialog").dialog('open');
+    //message($('#input_name').val());
     return false;
 };
 
@@ -200,7 +211,7 @@ var drag_seg_point_end = { "fill" : "blue",
 		       "stroke-width": 2,
 		     }; 
 
-dispatch['Cable'] = {'LT': '提交',      'L' : handle_move_segment_update,
+dispatch['Cable'] = {'LT': '编辑',      'L' : handle_move_segment_update,
 		     'MT': '下一个',     'M' : handle_move_segment_next,
 		     'RT': '返回',     'R' : handle_move_segment_back,
 		     'MSG': '参数设置模式......'};
@@ -342,11 +353,33 @@ function select_segment(){
 };
 
 function handle_move_segment_update(event) {
-
-    var k = segment_set[current_segment].data("key");
-    segment_datas[k]['name'] = $('#write').val();
-    put_sda("putSegments",segment_datas);
+    $("#dialog").dialog({ autoOpen: false,
+                          modal: true,
+                          buttons: { 
+                              "OK": function() {
+                                  update_segment_info();
+                                  $(this).dialog('close');
+                              },
+                              "Cancel": function() {
+                                  $(this).dialog('close');
+                              }
+                          }
+                        });
+    $("#dialog").dialog('open');
+    var msg = segment_set[current_segment].data('name');
+    message(msg);
     return false;
+};
+
+function update_segment_info() {
+    var name = $('#seg_name').val();
+    if (name.length == 0) {
+        return false;
+    }
+    var k = segment_set[current_segment].data("key");
+    segment_datas[k]['name'] = name;
+    segment_set[current_segment].data("name",name);
+    put_sda("putSegments",segment_datas);
 };
 
 function handle_move_segment_next(event) {
