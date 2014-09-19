@@ -379,8 +379,6 @@ function handle_move_segment_edit(event) {
 			      $( "#number" ).selectmenu();
 			      $( "#cable" ).selectmenu();
                               $('#seg_name').val(segment_set[current_segment].data('name'));
-			      document.forms['segment']['number']['selected'].value(6);
-			      //$('#number').selected.val("8");
 			      var k = segment_set[current_segment].data("key");
 			      segment_datas[k]['name'] = name;
 			      
