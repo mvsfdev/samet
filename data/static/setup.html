@@ -30,14 +30,14 @@
         <button id=right_btn class="msg_btn">Right</button>
       </div>
       <div id="dialog" title="Edit">
-        <form id="valid">
+        <form>
           <fieldset>
             <label for="name">Name</label>
             <input type="text" name="name" id="seg_name" value="" class="text ui-widget-content ui-corner-all">
 	    <label for="number">Owner PM</label>
 	    <select name="number" id="number">
 	      <option>1</option>
-	      <option selected="selected">2</option>
+	      <option selected="selected" id="selected"></option>
 	      <option>3</option>
 	      <option>4</option>
 	      <option>5</option>
@@ -57,7 +57,7 @@
 	    </p>
 	    <div id="slider-range"></div>
 	    <label for="name">Position</label>
-            <input type="text" name="name" id="seg_x0" value="From (100,100) to (200,100)" class="text ui-widget-content ui-corner-all"  readonly="readonly">
+            <input type="text" name="name" id="position" value="position" class="text ui-widget-content ui-corner-all"  readonly="readonly">
             <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
           </fieldset>
         </form>

@@ -379,7 +379,12 @@ function handle_move_segment_edit(event) {
 			      $( "#number" ).selectmenu();
 			      $( "#cable" ).selectmenu();
                               $('#seg_name').val(segment_set[current_segment].data('name'));
-
+			      document.forms['segment']['number']['selected'].value(6);
+			      //$('#number').selected.val("8");
+			      var k = segment_set[current_segment].data("key");
+			      segment_datas[k]['name'] = name;
+			      
+			      $('#position').val("(" + segment_datas[k]['x0'] + "," + segment_datas[k]['y0'] + ")" +  "-" + "(" + segment_datas[k]['x1'] + "," + segment_datas[k]['y1'] + ")" );
 			      $(function() {
 				  $( "#slider-range" ).slider({
 				      range: true,
@@ -387,10 +392,10 @@ function handle_move_segment_edit(event) {
 				      max: 200,
 				      values: [ 75, 100 ],
 				      slide: function( event, ui ) {
-					  $( "#amount" ).val( "From" + ui.values[ 0 ] + " to " + ui.values[ 1 ] );
+					  $( "#amount" ).val( "起始点" + ui.values[ 0 ] + "," + " 结束点 " + ui.values[ 1 ] );
 				      }
 				  });
-				  $( "#amount" ).val( "From" + $( "#slider-range" ).slider( "values", 0 ) +" to" + $( "#slider-range" ).slider( "values", 1 ) );
+				  $( "#amount" ).val( "起始点" + $( "#slider-range" ).slider( "values", 0 ) + "," + " 结束点 " + $( "#slider-range" ).slider( "values", 1 ) );
 			      });
 			      //formValid();
 			  }
