@@ -366,7 +366,7 @@ function handle_move_segment_edit(event) {
                                   $(this).dialog('close');
                               },
                               Ok: function() {
-				  segment_valid();
+				  //segment_valid();
                                   update_segment_info();
                                   $(this).dialog('close');
 
@@ -376,8 +376,6 @@ function handle_move_segment_edit(event) {
                               }
                           },
                           open: function() {
-			      $( "#number" ).selectmenu();
-			      $( "#cable" ).selectmenu();
                               $('#seg_name').val(segment_set[current_segment].data('name'));
 			      var k = segment_set[current_segment].data("key");
 			      segment_datas[k]['name'] = name;
@@ -398,6 +396,8 @@ function handle_move_segment_edit(event) {
 			      //formValid();
 			  }
                         });
+    $("#number").val('7');
+    $("#cable").val('B');
     $("#dialog").dialog('open');
     var msg = segment_set[current_segment].data('name');
     message(msg);
