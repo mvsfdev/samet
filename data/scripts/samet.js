@@ -237,7 +237,11 @@ var segment_datas = {
 		 'id' : 1,
 		 'name' : 'segment1',
 		 'type' : "seg",
-		 'comment' : 'Seg_1'
+		 'comment' : 'Seg_1',
+		 'owner_pm' : 6,
+		 'cable' : 'Cable A',
+		 'subcell_start' : 20,
+		 'subcell_end' : 50
 		},
 
     "segment2" :{'x0' : 200,
@@ -247,7 +251,12 @@ var segment_datas = {
 		 'id' : 2,
 		 'name' : 'segment2',
 		 'type' : 'seg',
-		 'comment' : 'Seg_2'
+		 'comment' : 'Seg_2',
+		 'owner_pm' : 1,
+		 'cable' : 'Cable A',
+		 'subcell_start' : 20,
+		 'subcell_end' : 50
+
 		},
 
 };
@@ -353,10 +362,11 @@ function select_segment(){
 };
 
 function handle_move_segment_edit(event) {
-
-    $("#dialog").dialog({ autoOpen: false,
+    var k = segment_set[current_segment].data("key");
+    $("#dialog").dialog({ autoOpen: true,
                           modal: true,
 			  width: 400,
+			  title: k,
                           buttons: { 
                               "Add": function() {
                               },
@@ -376,28 +386,45 @@ function handle_move_segment_edit(event) {
                               }
                           },
                           open: function() {
-                              $('#seg_name').val(segment_set[current_segment].data('name'));
-			      var k = segment_set[current_segment].data("key");
-			      segment_datas[k]['name'] = name;
-			      
-			      $('#position').val("(" + segment_datas[k]['x0'] + "," + segment_datas[k]['y0'] + ")" +  "-" + "(" + segment_datas[k]['x1'] + "," + segment_datas[k]['y1'] + ")" );
-			      $(function() {
-				  $( "#slider-range" ).slider({
-				      range: true,
-				      min: 1,
-				      max: 200,
-				      values: [ 75, 100 ],
-				      slide: function( event, ui ) {
-					  $( "#amount" ).val( "起始点" + ui.values[ 0 ] + "," + " 结束点 " + ui.values[ 1 ] );
-				      }
-				  });
-				  $( "#amount" ).val( "起始点" + $( "#slider-range" ).slider( "values", 0 ) + "," + " 结束点 " + $( "#slider-range" ).slider( "values", 1 ) );
-			      });
-			      //formValid();
-			  }
+    			  }
                         });
-    $("#number").val('7');
-    $("#cable").val('B');
+    //$("#dialog").val('1');
+    var k = segment_set[current_segment].data("key");
+    $('#seg_name').val(segment_set[current_segment].data('name'));
+    $('#position').val("(" + 
+		       segment_datas[k]['x0'] + "," + 
+		       segment_datas[k]['y0'] + ")" +  "-" + "(" + 
+		       segment_datas[k]['x1'] + "," + 
+		       segment_datas[k]['y1'] + ")" );
+    $("#pm_number").val(segment_datas[k]['owner_pm'] || 1);
+    $("#cable").val(segment_datas[k]['cable'] || 'B');
+    $(function() {
+	$("#slider_subcell_start").slider({
+	    range: "max",
+	    min: 1,
+	    max: 190,
+	    value: segment_datas[k]['subcell_start'] || 20,
+	    slide: function( event, ui ) {
+		//$( "#subcell_start" ).val(ui.value );
+		$("#subcell_start").text("Start subcell : " + ui.value);
+					  
+	    }
+	});
+	$( "#subcell_start" ).text("Start subcell : " + $( "#slider_subcell_start" ).slider( "value"));
+		
+	$( "#slider_subcell_end" ).slider({
+	    range: "max",
+	    min: 1,
+	    max: 190,
+	    value: segment_datas[k]['subcell_end'] || 30,
+	    slide: function( event, ui ) {
+		$( "#subcell_end" ).text("End subcell : " +  ui.value );
+	    }
+	});
+	$( "#subcell_end" ).text("End subcell : " +  $( "#slider_subcell_end" ).slider( "value" ) );
+    });
+    
+    //$("#label_sub").text('AB');
     $("#dialog").dialog('open');
     var msg = segment_set[current_segment].data('name');
     message(msg);
@@ -477,7 +504,7 @@ function update_segment(k){
 */
 function get_display_segment() {
     $.get( "getDisplaySegment",
-           { seg_no: 1},
+	   { seg_no: 1},
            function(data) {
                segment_datas = data;
                drawSegment(data);

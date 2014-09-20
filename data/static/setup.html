@@ -29,13 +29,15 @@
         <button id=mid_btn class="msg_btn">Mid</button>
         <button id=right_btn class="msg_btn">Right</button>
       </div>
-      <div id="dialog" title="Edit">
+      <div id="dialog" title="">
+
         <form>
           <fieldset>
-            <label for="name">Name</label>
+            <lable for="name">Name</label>
             <input type="text" name="name" id="seg_name" value="" class="text ui-widget-content ui-corner-all">
+
 	    <label for="number">Owner PM</label>
-	    <select name="number" id="number">
+	    <select name="number" id="pm_number">
 	      <option>1</option>
 	      <option selected="selected">2</option>
 	      <option>3</option>
@@ -52,13 +54,17 @@
 	    </select>
 
 	    <p>
-	      <label for="amount">Subcell</label>
-	      <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-	    </p>
-	    <div id="slider-range"></div>
-	    <label for="name">Position</label>
+	      <label for="amount" id="subcell_start"></label>
+	      <!--input type="text" id="subcell_start" readonly style="border:0; color:#f6931f; font-weight:bold;"-->
+	      <div id="slider_subcell_start"></div>
+	      <label for="amount" id="subcell_end"></label>
+	      <!--input type="text" id="subcell_end" readonly style="border:0; color:#f6931f; font-weight:bold;"-->
+	    </p>  
+	    <div id="slider_subcell_end"></div>
+
             <input type="text" name="name" id="position" value="position" class="text ui-widget-content ui-corner-all"  readonly="readonly">
             <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+
           </fieldset>
         </form>
       </div>
