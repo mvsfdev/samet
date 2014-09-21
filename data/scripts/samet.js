@@ -439,13 +439,13 @@ function segment_edit(){
     $("#input_number_select").hide();
     $("#status").hide();
     $("#status_select").hide();
-
-
-
+    $("#cable").hide();
+    $("#cable_select").hide();
+    $("#subcell_start").show();
+    $("#slider_subcell_start").show();
+    $("#subcell_end").show();
+    $("#slider_subcell_end").show();
 };
-
-
-
 
 function update_segment_info() {
     var name = $('#name').val();
@@ -756,6 +756,14 @@ function device_edit(){
     $("#input_number_select").hide();
     $("#status").hide();
     $("#status_select").hide();
+    $("#subcell_start").hide();
+    $("#slider_subcell_start").hide();
+    $("#subcell_end").hide();
+    $("#slider_subcell_end").hide();
+    $("#cable").show();
+    $("#cable_select").show();
+    $("#owner_pm").show();
+    $("#owner_pm_select").show();
 
 };
 
@@ -1085,8 +1093,22 @@ function auxiliary_edit(){
 		       auxiliary_datas[k]['y2'] + ")" +"(" + 
 		       auxiliary_datas[k]['x3'] + "," + 
 		       auxiliary_datas[k]['y3'] + ")" );
-$("#owner_pm").hide();
-$("#owner_pm_select").hide();
+    $("#owner_pm").hide();
+    $("#owner_pm_select").hide();
+    $("#subcell_start").hide();
+    $("#slider_subcell_start").hide();
+    $("#subcell_end").hide();
+    $("#slider_subcell_end").hide();
+    $("#cable").hide();
+    $("#cable_select").hide();
+    $("#owner").show();
+    $("#owner_select").show();
+    $("#owner_number").show();
+    $("#owner_number_select").show();
+    $("#input_number").show();
+    $("#input_number_select").show();
+    $("#status").show();
+    $("#status_select").show();
 
 };
 

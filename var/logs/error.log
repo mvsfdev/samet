@@ -21450,3 +21450,11 @@ AttributeError: 'NoneType' object has no attribute 'getDeviceState'
 [21/Sep/2014:16:04:44] ENGINE Bus STOPPED
 [21/Sep/2014:16:04:44] ENGINE Bus EXITING
 [21/Sep/2014:16:04:44] ENGINE Bus EXITED
+[21/Sep/2014:16:10:38] ENGINE Bus STARTING
+[21/Sep/2014:16:10:38] ENGINE Started monitor thread '_TimeoutMonitor'.
+[21/Sep/2014:16:10:38] ENGINE Bus STARTED
+[21/Sep/2014:16:46:15] ENGINE Bus STOPPING
+[21/Sep/2014:16:46:15] ENGINE Stopped thread '_TimeoutMonitor'.
+[21/Sep/2014:16:46:15] ENGINE Bus STOPPED
+[21/Sep/2014:16:46:15] ENGINE Bus EXITING
+[21/Sep/2014:16:46:15] ENGINE Bus EXITED
