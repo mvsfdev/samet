@@ -263,6 +263,7 @@ var segment_datas = {
 var segment_set = 0;
 var current_segment = 0;
 var segment_set_length = 0;
+//var segment_set[current_segment].data("key") = 0;
 
 function drawSegment(data){
     var path = "", line,x0,y0,x1,y1;
@@ -390,7 +391,7 @@ function handle_move_segment_edit(event) {
                         });
     //$("#dialog").val('1');
     var k = segment_set[current_segment].data("key");
-    $('#seg_name').val(segment_set[current_segment].data('name'));
+    $('#name').val(segment_set[current_segment].data('name'));
     $('#position').val("(" + 
 		       segment_datas[k]['x0'] + "," + 
 		       segment_datas[k]['y0'] + ")" +  "-" + "(" + 
@@ -423,7 +424,7 @@ function handle_move_segment_edit(event) {
 	});
 	$( "#subcell_end" ).text("End subcell : " +  $( "#slider_subcell_end" ).slider( "value" ) );
     });
-    
+   
     //$("#label_sub").text('AB');
     $("#dialog").dialog('open');
     var msg = segment_set[current_segment].data('name');
