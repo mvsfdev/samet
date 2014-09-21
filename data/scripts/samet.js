@@ -172,7 +172,7 @@ function put_sda(url,argx){
 
 
 dispatch['Movement'] = {'LT': '电缆',      'L' : handle_move_cable,
-			'MT': '设备',      'M' : handle_move_module,
+			'MT': '设备',      'M' : handle_move_device,
 			'RT': '传感器',    'R' : handle_move_aux,
 			'MSG': '参数设置模式......'};
 
@@ -182,8 +182,8 @@ function handle_move_cable(event) {
     return false;
 };
 
-function handle_move_module(event) {
-    set_system_state('Module'); 
+function handle_move_device(event) {
+    set_system_state('Device'); 
     get_device();
     return false;
 };
@@ -263,7 +263,6 @@ var segment_datas = {
 var segment_set = 0;
 var current_segment = 0;
 var segment_set_length = 0;
-//var segment_set[current_segment].data("key") = 0;
 
 function drawSegment(data){
     var path = "", line,x0,y0,x1,y1;
@@ -361,9 +360,8 @@ function select_segment(){
     cy = segment_datas[k]["y1"] * map.scale_y;
     segment_controls[1].attr({"cx" : cx , "cy" : cy});
 };
-
 function handle_move_segment_edit(event) {
-    var k = segment_set[current_segment].data("key");
+var k = segment_set[current_segment].data("key");
     $("#dialog").dialog({ autoOpen: true,
                           modal: true,
 			  width: 400,
@@ -390,6 +388,15 @@ function handle_move_segment_edit(event) {
     			  }
                         });
     //$("#dialog").val('1');
+    //$("#label_sub").text('AB');
+    segment_edit();
+    $("#dialog").dialog('open');
+    //var msg = segment_set[current_segment].data('name');
+    //message(msg);
+    return false;
+};
+
+function segment_edit(){
     var k = segment_set[current_segment].data("key");
     $('#name').val(segment_set[current_segment].data('name'));
     $('#position').val("(" + 
@@ -397,8 +404,8 @@ function handle_move_segment_edit(event) {
 		       segment_datas[k]['y0'] + ")" +  "-" + "(" + 
 		       segment_datas[k]['x1'] + "," + 
 		       segment_datas[k]['y1'] + ")" );
-    $("#pm_number").val(segment_datas[k]['owner_pm'] || 1);
-    $("#cable").val(segment_datas[k]['cable'] || 'B');
+    $("#owner_pm_select").val(segment_datas[k]['owner_pm'] || 1);
+    $("#cable_select").val(segment_datas[k]['cable'] || 'B');
     $(function() {
 	$("#slider_subcell_start").slider({
 	    range: "max",
@@ -424,38 +431,24 @@ function handle_move_segment_edit(event) {
 	});
 	$( "#subcell_end" ).text("End subcell : " +  $( "#slider_subcell_end" ).slider( "value" ) );
     });
-   
-    //$("#label_sub").text('AB');
-    $("#dialog").dialog('open');
-    var msg = segment_set[current_segment].data('name');
-    message(msg);
-    return false;
+    $("#owner").hide();
+    $("#owner_select").hide();
+    $("#owner_number").hide();
+    $("#owner_number_select").hide();
+    $("#input_number").hide();
+    $("#input_number_select").hide();
+    $("#status").hide();
+    $("#status_select").hide();
+
+
+
 };
 
 
 
 
-//function segment_valid(eventObj){
-//     if (document.forms["valid"]["quantity"].value >200 ||document.forms["valid"]["quantity"].value<1 ) {
-// 	alert("Limit 1-200");
-// 	if (eventObj.preventDefault){
-// 	    eventObj.preventDefault();
-// 	} else {
-// 	    window.event.returnValue = false;
-// 	}
-
-// 	return false;
-
-//     } else {
-	
-// 	return true;
-    
-//     } 
-
-// };
-
 function update_segment_info() {
-    var name = $('#seg_name').val();
+    var name = $('#name').val();
     if (name.length == 0) {
         return false;
     }
@@ -530,12 +523,12 @@ function put_segments(segments) {
 
 /***********************************************************************************************
  *
- *   Module
+ *   Device
  * 
  ***********************************************************************************************/
-dispatch['Module'] = {'LT': '提交',       'L' : handle_move_module_update,
-		      'MT': '下一个',     'M' : handle_move_module_next,
-		      'RT': '返回',       'R' : handle_move_module_back,
+dispatch['Device'] = {'LT': '编辑',       'L' : handle_move_device_edit,
+		      'MT': '下一个',     'M' : handle_move_device_next,
+		      'RT': '返回',       'R' : handle_move_device_back,
 		      'MSG': '参数设置模式......'};
 
 
@@ -553,25 +546,25 @@ var icon_RM="M7.393,3.676h4.239c0.698,0,1.273,0.104,1.727,0.311c0.86,0.397,1.29,
 icon_RM +="M16.597,3.676h1.81l2.682,7.883l2.662-7.883h1.797V13h-1.206V7.496c0-0.189,0.005-0.505,0.013-0.945s0.013-0.912,0.013-1.416L21.704,13h-1.252l-2.688-7.865v0.286c0,0.229,0.006,0.576,0.019,1.044s0.019,0.812,0.019,1.031V13h-1.206V3.676z";
 
 
-var module_attr =  {"stroke" : "black",
+var device_attr =  {"stroke" : "black",
 		    "stroke-width" : 2,
 		    "fill" : "#0F0",
 		    "fill-opacity" : 1
 		   };
-var module_selected_attr =  {"stroke" : "red",
+var device_selected_attr =  {"stroke" : "red",
 			     "stroke-width" : 2,
 			     "fill" : "#0F0",
 			     "fill-opacity" : 1
 			    };
 
-var module_text_attr =  {"stroke" : "black",
+var device_text_attr =  {"stroke" : "black",
 			 "stroke-width" : 1,
 			 "fill" : "black",
 			 "fill-opacity" : 1
 			};
 
 
-var module_datas = {
+var device_datas = {
     'RM2': { 'x0' : 700,
 	     'y0' : 100,
 	     'x1' : 100,
@@ -607,7 +600,7 @@ var device_set_length = 0;
 var device_text = 0;
 var device_controls;
 var cx,cy;
-function drawModule(data){
+function drawDevice(data){
     var path = "", line,x0,y0,x1,y1,icon,dev_type;
     if(device_set) {
 	clear_path(device_set);
@@ -635,7 +628,7 @@ function drawModule(data){
 	line = map.paper.path(icon_BOX);
 	//line = map.paper.path(icon_seg);
 
-	line.attr(module_attr);
+	line.attr(device_attr);
         line.translate(x0,y0);
         line.data('key',name);
         line.data('id',value['id']);
@@ -662,7 +655,7 @@ function drawModule(data){
             break;
         };
 
-        line = map.paper.path(icon).attr(module_text_attr);
+        line = map.paper.path(icon).attr(device_text_attr);
       	line.translate(x0,y0);
         device_text.push(line);
     });
@@ -671,20 +664,20 @@ function drawModule(data){
     }
 
     current_device = 0;
-    device_set[current_device].attr(module_selected_attr);
+    device_set[current_device].attr(device_selected_attr);
     var msg = device_set[current_device].data('name');
     message(msg);
 
     var k = device_set[current_device].data("key");
-    x0 = module_datas[k]["x0"] * map.scale_x;
-    y0 = module_datas[k]["y0"] * map.scale_y;
+    x0 = device_datas[k]["x0"] * map.scale_x;
+    y0 = device_datas[k]["y0"] * map.scale_y;
     device_controls = map.paper.circle(x0, y0, 5).attr(drag_point);
     device_controls.update = function (x, y){     
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
 	var k = device_set[current_device].data("key");
-	module_datas[k]["x0"] = X /  map.scale_x;
-	module_datas[k]["y0"] = Y / map.scale_y;
+	device_datas[k]["x0"] = X /  map.scale_x;
+	device_datas[k]["y0"] = Y / map.scale_y;
         this.attr({cx: X, cy: Y});
 	device_set[current_device].transform('t'+ X + ','+ Y);
 	device_text[current_device].transform('t'+ X + ','+ Y);   
@@ -696,36 +689,100 @@ function drawModule(data){
 };
 
 function click_dev(event){
-    device_set[current_device].attr(module_attr);
+    device_set[current_device].attr(device_attr);
     current_device = this.data("index");
     select_device();
     return false;
 
 };
 function select_device(){
-    device_set[current_device].attr(module_selected_attr);
+    device_set[current_device].attr(device_selected_attr);
     var msg = device_set[current_device].data('name');
     message(msg);
 
     var k = device_set[current_device].data("key");
     
-    cx = module_datas[k]["x0"] * map.scale_x;
-    cy = module_datas[k]["y0"] * map.scale_y;
+    cx = device_datas[k]["x0"] * map.scale_x;
+    cy = device_datas[k]["y0"] * map.scale_y;
     device_controls.attr({"cx" : cx , "cy" : cy});
 
     return false;
 };
 
-function handle_move_module_update(event) {
-    var k = device_set[current_device].data("key");
-    module_datas[k]['name'] = $('#write').val();
-    put_sda("putDevices",module_datas);
-    message('Module Placement');
+
+function handle_move_device_edit(event) {
+var k = device_set[current_device].data("key");
+    $("#dialog").dialog({ autoOpen: true,
+                          modal: true,
+			  width: 400,
+			  title: k,
+                          buttons: { 
+                              "Add": function() {
+                              },
+                              "Delete": function() {
+				  device_set[current_device].remove();
+				  handle_move_device_next(event)
+                                  $(this).dialog('close');
+                              },
+                              Ok: function() {
+				  update_device_info();
+                                  $(this).dialog('close');
+
+                              },
+                              Cancel: function() {
+                                  $(this).dialog('close');
+                              }
+                          },
+                          open: function() {
+    			  }
+                        });
+    device_edit();
+    $("#dialog").dialog('open');
     return false;
 };
 
-function handle_move_module_next(event) {
-    device_set[current_device].attr(module_attr);
+
+function device_edit(){
+    var k = device_set[current_device].data("key");
+    $('#name').val(device_set[current_device].data('name'));
+    $('#position').val("(" + 
+		       device_datas[k]['x0'] + "," + 
+		       device_datas[k]['y0'] + ")" );
+    $("#owner").hide();
+    $("#owner_select").hide();
+    $("#owner_number").hide();
+    $("#owner_number_select").hide();
+    $("#input_number").hide();
+    $("#input_number_select").hide();
+    $("#status").hide();
+    $("#status_select").hide();
+
+};
+
+function update_device_info() {
+    var name = $('#name').val();
+    if (name.length == 0) {
+        return false;
+    }
+    var k = device_set[current_device].data("key");
+    device_datas[k]['name'] = name;
+    device_set[current_device].data("name",name);
+    put_sda("putDevices",device_datas);
+};
+
+
+
+
+function handle_move_device_update(event) {
+    var k = device_set[current_device].data("key");
+    device_datas[k]['name'] = $('#write').val();
+    put_sda("putDevices",device_datas);
+    message('Device Placement');
+    return false;
+};
+
+function handle_move_device_next(event) {
+    device_set[current_device].attr(device_attr);
     current_device++;
     if (current_device >= device_set_length) {
 	current_device = 0;
@@ -734,9 +791,9 @@ function handle_move_module_next(event) {
     return false;
 };
 
-function handle_move_module_back(event) {
-    put_sda("putDevices",module_datas);
-    device_set.attr(module_attr);
+function handle_move_device_back(event) {
+    put_sda("putDevices",device_datas);
+    device_set.attr(device_attr);
     device_controls.remove();
     set_system_state('Ready');
     return false;
@@ -750,8 +807,8 @@ function get_device() {
     $.get("getDevices",
           {dev_no: 1},
           function(data) {
-              module_datas = data;
-              drawModule(data);
+              device_datas = data;
+              drawDevice(data);
           }
          );
 }; 
@@ -767,7 +824,7 @@ function get_device() {
  ***********************************************************************************************/
 
 
-dispatch['Aux'] = {'LT': '提交',       'L' : handle_move_aux_update,
+dispatch['Aux'] = {'LT': '编辑',       'L' : handle_move_aux_edit,
 		   'MT': '下一个',     'M' : handle_move_aux_next,
 		   'RT': '返回',       'R' : handle_move_aux_back,
 		   'MSG': 'aux设置模式......'};
@@ -981,6 +1038,70 @@ function select_auxiliary(){
 
     return false;
 };
+
+
+
+function handle_move_aux_edit(event) {
+var k = auxiliary_set[current_auxiliary].data("key");
+    $("#dialog").dialog({ autoOpen: true,
+                          modal: true,
+			  width: 400,
+			  title: k,
+                          buttons: { 
+                              "Add": function() {
+                              },
+                              "Delete": function() {
+				  auxiliary_set[current_auxiliary].remove();
+				  handle_move_aux_next(event)
+                                  $(this).dialog('close');
+                              },
+                              Ok: function() {
+				  update_auxiliary_info();
+                                  $(this).dialog('close');
+
+                              },
+                              Cancel: function() {
+                                  $(this).dialog('close');
+                              }
+                          },
+                          open: function() {
+    			  }
+                        });
+    auxiliary_edit();
+    $("#dialog").dialog('open');
+    return false;
+};
+
+
+function auxiliary_edit(){
+    var k = auxiliary_set[current_auxiliary].data("key");
+    $('#name').val(auxiliary_set[current_auxiliary].data('name'));
+    $('#position').val("(" + 
+		       auxiliary_datas[k]['x0'] + "," + 
+		       auxiliary_datas[k]['y0'] + ")" +"(" + 
+		       auxiliary_datas[k]['x1'] + "," + 
+		       auxiliary_datas[k]['y1'] + ")" +"(" + 
+		       auxiliary_datas[k]['x2'] + "," + 
+		       auxiliary_datas[k]['y2'] + ")" +"(" + 
+		       auxiliary_datas[k]['x3'] + "," + 
+		       auxiliary_datas[k]['y3'] + ")" );
+$("#owner_pm").hide();
+$("#owner_pm_select").hide();
+
+};
+
+function update_auxiliary_info() {
+    var name = $('#name').val();
+    if (name.length == 0) {
+        return false;
+    }
+    var k = auxiliary_set[current_auxiliary].data("key");
+    auxiliary_datas[k]['name'] = name;
+    auxiliary_set[current_auxiliary].data("name",name);
+    put_sda("putAuxiliaries",auxiliary_datas);
+};
+
+
 
 function handle_move_aux_update(event) {
     var k = auxiliary_set[current_auxiliary].data("key");
