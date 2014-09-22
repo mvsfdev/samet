@@ -12,6 +12,8 @@ from twisted.internet import reactor
 from twisted.python import log
 
 import cherrypy
+from cherrypy.lib import static
+
 from twisted.web.wsgi import WSGIResource
 from mako.template import Template
 
@@ -660,10 +662,36 @@ class Root(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def upload(self, file=None):
-        print file
-        result = {"operation": "request", "result": "success"}
+    def upload_map(self, file=None):
         uload_path = './data/media/map.png'
+        return self._write_file(file,uload_path)
+
+    @cherrypy.expose
+    def download_map(self):
+        localDir = os.path.dirname(__file__)
+        absDir = os.path.join(os.getcwd(), localDir)
+        path = os.path.join(absDir, "data/media/map.png")
+
+        #path = os.path.join(current_dir, 'data','media','map.png')
+        print path
+        return static.serve_file(path, "application/x-download",
+                                 "attachment", os.path.basename(path))
+
+    @cherrypy.expose
+    @cherrypy.tools.json_out()
+    def upload_db(self, file=None):
+        uload_path = './data/database/www.db'
+        return self._write_file(file,uload_path)
+
+    @cherrypy.expose
+    def download_db(self):
+        path = os.path.join(current_dir, 'data','database','www.db')
+        return static.serve_file(path, "application/x-download",
+                                 "attachment", os.path.basename(path))
+
+
+    def _write_file(self,file,target):
+        result = {"operation": "request", "result": "success"}
         size = 0
         all_data = ''
         while True:
@@ -673,7 +701,7 @@ class Root(object):
                 break
                 size += len(data)
         try:
-            saved_file=open(uload_path, 'wb') 
+            saved_file=open(target, 'wb') 
             saved_file.write(all_data) 
             saved_file.close()
         except ValueError:
@@ -682,16 +710,25 @@ class Root(object):
         return result
 
     @cherrypy.expose
-    def test_upload(self):
+    def files(self):
         """Simplest possible HTML file upload form. Note that the encoding
         type must be multipart/form-data."""
         
         return """
             <html>
             <body>
-                <form target="iframe" action="upload" method="post" enctype="multipart/form-data">
-                    File: <input type="file" name="file"/> <br/>
+                <form target="iframe" action="upload_map" method="post" enctype="multipart/form-data">
+                    Map: <input type="file" name="file"/> <br/>
                     <input type="submit"/>
+                    <h2>Download map file</h2>
+                    <a href='download_map'>This One</a>
+
+                </form>
+                <form target="iframe" action="upload_db" method="post" enctype="multipart/form-data">
+                    DB: <input type="file" name="db"/> <br/>
+                    <input type="submit"/>
+                    <h2>Download databse file</h2>
+                    <a href='download_db'>This One</a>
                 </form>
                 <iframe name="iframe" id="iframe" style="display:none" ></iframe>
             </body>
