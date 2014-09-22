@@ -15,6 +15,8 @@ import cherrypy
 from twisted.web.wsgi import WSGIResource
 from mako.template import Template
 
+import cgi
+
 import os.path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -34,29 +36,6 @@ icon_TU += "M17.987,3.676v5.764c0,0.677,0.128,1.239,0.384,1.688c0.379,0.678,1.02
 
 icon_RM="M7.393,3.676h4.239c0.698,0,1.273,0.104,1.727,0.311c0.86,0.397,1.29,1.132,1.29,2.203c0,0.559-0.115,1.016-0.346,1.371c-0.23,0.355-0.553,0.641-0.968,0.856c0.364,0.148,0.638,0.343,0.822,0.584c0.184,0.241,0.287,0.633,0.308,1.175l0.044,1.25c0.013,0.355,0.042,0.62,0.089,0.793c0.076,0.297,0.211,0.487,0.406,0.572V13h-1.549c-0.042-0.08-0.076-0.184-0.102-0.311s-0.046-0.373-0.063-0.736l-0.076-1.556c-0.029-0.609-0.249-1.018-0.66-1.226c-0.235-0.113-0.603-0.171-1.104-0.171H8.656V13H7.393V3.676z M11.495,7.947c0.576,0,1.032-0.118,1.368-0.355s0.503-0.664,0.503-1.282c0-0.664-0.234-1.117-0.704-1.358c-0.251-0.127-0.586-0.19-1.006-0.19h-3v3.187H11.495z"
 icon_RM +="M16.597,3.676h1.81l2.682,7.883l2.662-7.883h1.797V13h-1.206V7.496c0-0.189,0.005-0.505,0.013-0.945s0.013-0.912,0.013-1.416L21.704,13h-1.252l-2.688-7.865v0.286c0,0.229,0.006,0.576,0.019,1.044s0.019,0.812,0.019,1.031V13h-1.206V3.676z"
-
-import cgi
-import tempfile
-
-class myFieldStorage(cgi.FieldStorage):
-    """Our version uses a named temporary file instead of the default
-    non-named file; keeping it visibile (named), allows us to create a
-    2nd link after the upload is done, thus avoiding the overhead of
-    making a copy to the destination filename."""
-    
-    def make_file(self, binary=None):
-        return tempfile.NamedTemporaryFile()
-
-
-def noBodyProcess():
-    """Sets cherrypy.request.process_request_body = False, giving
-    us direct control of the file upload destination. By default
-    cherrypy loads it to memory, we are directing it to disk."""
-    cherrypy.request.process_request_body = False
-
-cherrypy.tools.noBodyProcess = cherrypy.Tool('before_request_body', noBodyProcess)
-
-
 
 # Our CherryPy application
 class Root(object):
@@ -680,41 +659,27 @@ class Root(object):
 
 
     @cherrypy.expose
-    @cherrypy.tools.noBodyProcess()
-    def upload(self, theFile=None):
-        """upload action
-        
-        We use our variation of cgi.FieldStorage to parse the MIME
-        encoded HTML form data containing the file."""
-        
-        # the file transfer can take a long time; by default cherrypy
-        # limits responses to 300s; we increase it to 1h
-        cherrypy.response.timeout = 3600
-        
-        # convert the header keys to lower case
-        lcHDRS = {}
-        for key, val in cherrypy.request.headers.iteritems():
-            lcHDRS[key.lower()] = val
-        
-        # at this point we could limit the upload on content-length...
-        # incomingBytes = int(lcHDRS['content-length'])
-        
-        # create our version of cgi.FieldStorage to parse the MIME encoded
-        # form data where the file is contained
-        formFields = myFieldStorage(fp=cherrypy.request.rfile,
-                                    headers=lcHDRS,
-                                    environ={'REQUEST_METHOD':'POST'},
-                                    keep_blank_values=True)
-        
-        # we now create a 2nd link to the file, using the submitted
-        # filename; if we renamed, there would be a failure because
-        # the NamedTemporaryFile, used by our version of cgi.FieldStorage,
-        # explicitly deletes the original filename
-        theFile = formFields['theFile']
-        os.link(theFile.file.name, './data/media/'+theFile.filename)
-        
-        return "ok, got it filename='%s'" % theFile.filename
+    @cherrypy.tools.json_out()
+    def upload(self, file=None):
+        print file
+        result = {"operation": "request", "result": "success"}
+        uload_path = './data/media/map.png'
+        size = 0
+        all_data = ''
+        while True:
+            data = file.file.read(8192)
+            all_data += data
+            if not data:
+                break
+                size += len(data)
+        try:
+            saved_file=open(uload_path, 'wb') 
+            saved_file.write(all_data) 
+            saved_file.close()
+        except ValueError:
+            raise cherrypy.HTTPError(400, 'SOME ERROR')
 
+        return result
 
     @cherrypy.expose
     def test_upload(self):
@@ -724,10 +689,11 @@ class Root(object):
         return """
             <html>
             <body>
-                <form action="upload" method="post" enctype="multipart/form-data">
-                    File: <input type="file" name="theFile"/> <br/>
+                <form target="iframe" action="upload" method="post" enctype="multipart/form-data">
+                    File: <input type="file" name="file"/> <br/>
                     <input type="submit"/>
                 </form>
+                <iframe name="iframe" id="iframe" style="display:none" ></iframe>
             </body>
             </html>
             """
