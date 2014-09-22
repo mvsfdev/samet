@@ -679,9 +679,9 @@ class Root(object):
 
     @cherrypy.expose
     @cherrypy.tools.json_out()
-    def upload_db(self, file=None):
+    def upload_db(self, db=None):
         uload_path = './data/database/www.db'
-        return self._write_file(file,uload_path)
+        return self._write_file(db,uload_path)
 
     @cherrypy.expose
     def download_db(self):

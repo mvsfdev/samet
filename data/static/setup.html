@@ -16,11 +16,12 @@
 
  <body>
     <div id="file" title= "File">
-      <form enctype="multipart/form-data" method="post" action="upload">
-	<input type="file" name="theFile">
+      <form target="iframe" action="upload_map" method="post" enctype="multipart/form-data">
+	<input type="file" name="file">
 	<br>
 	<input type="submit">
       </form>
+      <iframe name="iframe" id="iframe" style="display:none" ></iframe>
     </div>
 
     <div id="canvas"></div>
