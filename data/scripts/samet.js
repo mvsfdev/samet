@@ -25,8 +25,8 @@ function initialize(){
     map.background = map.paper.image("media/map.png",0,0,map.width,map.height);
     map.scale_x = map.width / 1912;   
     map.scale_y = map.height / 1022;  
-
     set_system_state('Ready');
+
     
     return false; 
 };
@@ -86,7 +86,8 @@ function set_system_state(state) {
 };
 
 function handle_install(event) {
-    set_system_state('Install');
+    handle_install_edit();
+    //set_system_state('Install');
     return false;
 };
 
@@ -100,6 +101,60 @@ function handle_parament(event) {
     // $('#message_box').text(" " + map.width + " x "+ map.height +" " + map.scale_x +  " x " + map.scale_y);
     return false;
 };
+
+
+
+function handle_install_edit(event) {
+    $("#dialog_set").dialog({ autoOpen: true,
+                          modal: true,
+			  width: 400,
+                          buttons: { 
+                              "Load Map": function() {
+				  open_file();
+                                  $(this).dialog('close');
+
+                              },
+                              "Read PM": function() {
+                                  $(this).dialog('close');
+                              },
+                              "Get Segments": function() {
+				  get_display_segment();
+                                  $(this).dialog('close');
+                              },
+                              "Get Devices": function() {
+				  get_device();
+                                  $(this).dialog('close');
+                              },
+                              "Get Auxiliaries": function() {
+				  get_auxiliary();
+                                  $(this).dialog('close');
+                              },
+                              "Put Datas": function() {
+				  put_sda("putSegments",segment_datas);
+				  put_sda("putDevices",device_datas);
+				  put_sda("putauxiliaries",auxiliary_datas);
+
+                                  $(this).dialog('close');
+                              },
+                          },
+                          open: function() {
+    			  }
+                        });
+    return false;
+};
+
+
+
+function open_file(event) {
+    $("#file").dialog({ autoOpen: true,
+                          modal: true,
+			  width: 400,
+                        });
+    //$("#dialog").dialog('open');
+
+    return false;
+};
+
 
 
 /***********************************************************************************************
@@ -116,38 +171,39 @@ var drag_point_end = { "fill" : "blue",
 		       "stroke-width": 2,
 		     }; 
 
-dispatch['Install'] = {'LT': '地图',      'L' : handle_install_from_map,
-                       'MT': '读PM',     'M' : handle_install_readPM,
-                       'RT': '返回',     'R' : handle_install_back,
-                       'MSG': '参数设置模式......'};
-
-function handle_install_from_map(event) {
-    $("#dialog").dialog({ autoOpen: false,
-                          modal: true,
-                          buttons: { 
-                              "OK": function() {
-                                  message($('#seg_name').val());
-                                  $(this).dialog('close');
-                              },
-                              "Cancel": function() {
-                                  $(this).dialog('close');
-                              }
-                          }
-                        });
-    $("#dialog").dialog('open');
-    //message($('#input_name').val());
-    return false;
-};
-
-function handle_install_readPM(event) {
-    return false;
-};
+// dispatch['Install'] = {'LT': '地图',      'L' : handle_install_from_map,
+//                        'MT': '读PM',     'M' : handle_install_readPM,
+//                        'RT': '返回',     'R' : handle_install_back,
+//                        'MSG': '参数设置模式......'};
 
 
-function handle_install_back(event) {
-    set_system_state('Ready');
-    return false;
-};
+// function handle_install_from_map(event) {
+//     $("#dialog").dialog({ autoOpen: false,
+//                           modal: true,
+//                           buttons: { 
+//                               "OK": function() {
+//                                   message($('#seg_name').val());
+//                                   $(this).dialog('close');
+//                               },
+//                               "Cancel": function() {
+//                                   $(this).dialog('close');
+//                               }
+//                           }
+//                         });
+//     $("#dialog").dialog('open');
+//     //message($('#input_name').val());
+//     return false;
+// };
+
+// function handle_install_readPM(event) {
+//     return false;
+// };
+
+
+// function handle_install_back(event) {
+//     set_system_state('Ready');
+//     return false;
+// };
 
 
 /***********************************************************************************************
@@ -178,19 +234,29 @@ dispatch['Movement'] = {'LT': '电缆',      'L' : handle_move_cable,
 
 function handle_move_cable(event) {
     set_system_state('Cable'); 
-    get_display_segment();
+    if (segment_datas.length != 0){
+	drawSegment(segment_datas);
+	draw_segment_point(segment_datas);
+    };
     return false;
 };
 
 function handle_move_device(event) {
     set_system_state('Device'); 
-    get_device();
+    if (device_datas.length != 0){
+	drawDevice(device_datas);
+	draw_device_point(device_datas);
+    };
+    //get_device();
     return false;
 };
 
 function handle_move_aux(event) {
     set_system_state('Aux');
-    get_auxiliary();
+    if (auxiliary_datas.length != 0){
+	drawAuxiliary(auxiliary_datas);
+	draw_auxiliary_point(auxiliary_datas);
+    };
     return false;
 };
 
@@ -228,6 +294,7 @@ var segment_selected_attr = { "stroke" : "red",
 			      "fill" : "red",
 			      "fill-opacity" : 1
 			    };
+
 
 var segment_datas = {
     "segment1" :{'x0' : 100,
@@ -298,14 +365,21 @@ function drawSegment(data){
     });
     if (segment_set_length == 0) {
         return false;
-    }
+    };
+    segment_set.click(click_seg);    
+    return true;
+};
 
+
+function draw_segment_point(data) {
+    var path = "", line,x0,y0,x1,y1;
     current_segment = 0;
     segment_set[current_segment].attr(segment_selected_attr);
     var msg = segment_set[current_segment].data('name');
     message(msg);
 
     var k = segment_set[current_segment].data("key");
+    //map.scale_x = Math.round(map.scale_x);
     x0 = segment_datas[k]["x0"] * map.scale_x;
     y0 = segment_datas[k]["y0"] * map.scale_y;
     x1 = segment_datas[k]["x1"] * map.scale_x;
@@ -314,13 +388,14 @@ function drawSegment(data){
     segment_controls = map.paper.set(
 	map.paper.circle(x0, y0, 5).attr(drag_seg_point),
 	map.paper.circle(x1, y1, 5).attr(drag_seg_point_end)
+
     );
     segment_controls[0].update = function (x, y){     
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
 	var k = segment_set[current_segment].data("key");
-	segment_datas[k]["x0"] = X /  map.scale_x;
-	segment_datas[k]["y0"] = Y / map.scale_y;
+	segment_datas[k]["x0"] = Math.round(X / map.scale_x);
+	segment_datas[k]["y0"] = Math.round(Y / map.scale_y);
         this.attr({cx: X, cy: Y});
 	update_segment(k);
     };
@@ -328,8 +403,8 @@ function drawSegment(data){
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
 	var k = segment_set[current_segment].data("key");
-	segment_datas[k]["x1"] = X /  map.scale_x;
-	segment_datas[k]["y1"] = Y / map.scale_y;
+	segment_datas[k]["x1"] = Math.round(X / map.scale_x);
+	segment_datas[k]["y1"] = Math.round(Y / map.scale_y);
         this.attr({cx: X, cy: Y});
 	update_segment(k);
     };
@@ -367,18 +442,17 @@ var k = segment_set[current_segment].data("key");
 			  width: 400,
 			  title: k,
                           buttons: { 
-                              "Add": function() {
-                              },
-                              "Delete": function() {
-				  segment_set[current_segment].remove();
-				  handle_move_segment_next(event)
-                                  $(this).dialog('close');
-                              },
+                              // "Add": function() {
+                              // },
+                              // "Delete": function() {
+			      // 	  segment_set[current_segment].remove();
+			      // 	  handle_move_segment_next(event)
+                              //     $(this).dialog('close');
+                              // },
                               Ok: function() {
 				  //segment_valid();
                                   update_segment_info();
                                   $(this).dialog('close');
-
                               },
                               Cancel: function() {
                                   $(this).dialog('close');
@@ -411,9 +485,10 @@ function segment_edit(){
 	    range: "max",
 	    min: 1,
 	    max: 190,
-	    value: segment_datas[k]['subcell_start'] || 20,
+	    value: segment_datas[k]['subcell_start'] || 10,
 	    slide: function( event, ui ) {
 		//$( "#subcell_start" ).val(ui.value );
+
 		$("#subcell_start").text("Start subcell : " + ui.value);
 					  
 	    }
@@ -445,6 +520,8 @@ function segment_edit(){
     $("#slider_subcell_start").show();
     $("#subcell_end").show();
     $("#slider_subcell_end").show();
+    $("#owner_pm").show();
+    $("#owner_pm_select").show();
 };
 
 function update_segment_info() {
@@ -455,7 +532,29 @@ function update_segment_info() {
     var k = segment_set[current_segment].data("key");
     segment_datas[k]['name'] = name;
     segment_set[current_segment].data("name",name);
-    put_sda("putSegments",segment_datas);
+    
+    //put_sda("putSegments",segment_datas);
+    var owner_pm = $('#owner_pm_select').val();
+    if (owner_pm.length == 0) {
+	return false;
+    }
+    segment_datas[k]['owner_pm'] = owner_pm;
+    segment_set[current_segment].data("owner_pm",owner_pm);
+
+    var start_subcell= $( "#slider_subcell_start" ).slider();
+    if (start_subcell.length == 0) {
+	return false;
+    }
+    segment_datas[k]['start_subcell'] = start_subcell;
+    segment_set[current_segment].data("start_subcell",start_subcell);
+
+    var end_subcell= $( "#slider_subcell_end" ).slider();
+    if (end_subcell.length == 0) {
+	return false;
+    }
+    segment_datas[k]['end_subcell'] = end_subcell;
+    segment_set[current_segment].data("end_subcell",end_subcell);
+
 };
 
 function handle_move_segment_next(event) {
@@ -662,7 +761,12 @@ function drawDevice(data){
     if (device_set_length == 0) {
         return false;
     }
+    device_set.click(click_dev);
+    return true;
+};
 
+function draw_device_point(data){
+    var path = "", line,x0,y0,x1,y1,icon,dev_type;
     current_device = 0;
     device_set[current_device].attr(device_selected_attr);
     var msg = device_set[current_device].data('name');
@@ -676,8 +780,8 @@ function drawDevice(data){
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
 	var k = device_set[current_device].data("key");
-	device_datas[k]["x0"] = X /  map.scale_x;
-	device_datas[k]["y0"] = Y / map.scale_y;
+	device_datas[k]["x0"] = Math.round(X / map.scale_x);
+	device_datas[k]["y0"] = Math.round(Y / map.scale_y);
         this.attr({cx: X, cy: Y});
 	device_set[current_device].transform('t'+ X + ','+ Y);
 	device_text[current_device].transform('t'+ X + ','+ Y);   
@@ -717,13 +821,13 @@ var k = device_set[current_device].data("key");
 			  width: 400,
 			  title: k,
                           buttons: { 
-                              "Add": function() {
-                              },
-                              "Delete": function() {
-				  device_set[current_device].remove();
-				  handle_move_device_next(event)
-                                  $(this).dialog('close');
-                              },
+                              // "Add": function() {
+                              // },
+                              // "Delete": function() {
+			      // 	  device_set[current_device].remove();
+			      // 	  handle_move_device_next(event)
+                              //     $(this).dialog('close');
+                              // },
                               Ok: function() {
 				  update_device_info();
                                   $(this).dialog('close');
@@ -775,7 +879,22 @@ function update_device_info() {
     var k = device_set[current_device].data("key");
     device_datas[k]['name'] = name;
     device_set[current_device].data("name",name);
-    put_sda("putDevices",device_datas);
+    //put_sda("putDevices",device_datas);
+
+    var owner_pm = $('#owner_pm_select').val();
+    if (owner_pm.length == 0) {
+        return false;
+    }
+    device_datas[k]['owner_pm'] = owner_pm;
+    device_set[current_device].data("owner_pm",owner_pm);
+
+    var cable = $('#cable_select').val();
+    if (cable.length == 0) {
+        return false;
+    }
+    device_datas[k]['cable'] = cable;
+    device_set[current_device].data("cable",cable);
+    
 };
 
 
@@ -949,7 +1068,11 @@ function drawAuxiliary(data){
     if (auxiliary_set_length == 0) {
         return false;
     }
+    auxiliary_set.click(click_aux);
+    return true;
+};
 
+function draw_auxiliary_point(data){
     current_auxiliary = 0;
     auxiliary_set[current_auxiliary].attr(auxiliary_selected_attr);
     var msg = auxiliary_set[current_auxiliary].data('name');
@@ -974,8 +1097,8 @@ function drawAuxiliary(data){
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
 	var k = auxiliary_set[current_auxiliary].data("key");
-	auxiliary_datas[k]["x0"] = X /  map.scale_x;
-	auxiliary_datas[k]["y0"] = Y / map.scale_y;
+	auxiliary_datas[k]["x0"] = Math.round(X / map.scale_x);
+	auxiliary_datas[k]["y0"] = Math.round(Y / map.scale_y);
         this.attr({cx: X, cy: Y});
 	update_auxiliary(k);
     };
@@ -983,8 +1106,8 @@ function drawAuxiliary(data){
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
 	var k = auxiliary_set[current_auxiliary].data("key");
-	auxiliary_datas[k]["x1"] = X /  map.scale_x;
-	auxiliary_datas[k]["y1"] = Y / map.scale_y;
+	auxiliary_datas[k]["x1"] = Math.round(X / map.scale_x);
+	auxiliary_datas[k]["y1"] = Math.round(Y / map.scale_y);
         this.attr({cx: X, cy: Y});
 	update_auxiliary(k);
     };
@@ -993,8 +1116,8 @@ function drawAuxiliary(data){
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
 	var k = auxiliary_set[current_auxiliary].data("key");
-	auxiliary_datas[k]["x2"] = X /  map.scale_x;
-	auxiliary_datas[k]["y2"] = Y / map.scale_y;
+	auxiliary_datas[k]["x2"] = Math.round(X / map.scale_x);
+	auxiliary_datas[k]["y2"] = Math.round(Y / map.scale_y);
         this.attr({cx: X, cy: Y});
 	update_auxiliary(k);
     };
@@ -1002,8 +1125,8 @@ function drawAuxiliary(data){
 	var X = this.attr("cx") + x,
         Y = this.attr("cy") + y;
 	var k = auxiliary_set[current_auxiliary].data("key");
-	auxiliary_datas[k]["x3"] = X /  map.scale_x;
-	auxiliary_datas[k]["y3"] = Y / map.scale_y;
+	auxiliary_datas[k]["x3"] = Math.round(X / map.scale_x);
+	auxiliary_datas[k]["y3"] = Math.round(Y / map.scale_y);
         this.attr({cx: X, cy: Y});
 	update_auxiliary(k);
     };
@@ -1056,13 +1179,13 @@ var k = auxiliary_set[current_auxiliary].data("key");
 			  width: 400,
 			  title: k,
                           buttons: { 
-                              "Add": function() {
-                              },
-                              "Delete": function() {
-				  auxiliary_set[current_auxiliary].remove();
-				  handle_move_aux_next(event)
-                                  $(this).dialog('close');
-                              },
+                              // "Add": function() {
+                              // },
+                              // "Delete": function() {
+			      // 	  auxiliary_set[current_auxiliary].remove();
+			      // 	  handle_move_aux_next(event)
+                              //     $(this).dialog('close');
+                              // },
                               Ok: function() {
 				  update_auxiliary_info();
                                   $(this).dialog('close');
@@ -1121,6 +1244,35 @@ function update_auxiliary_info() {
     auxiliary_datas[k]['name'] = name;
     auxiliary_set[current_auxiliary].data("name",name);
     put_sda("putAuxiliaries",auxiliary_datas);
+
+    var owner = $('#owner_select').val();
+    if (owner.length == 0) {
+        return false;
+    }
+    auxiliary_datas[k]['owner'] = owner;
+    auxiliary_set[current_auxiliary].data("owner",owner);
+
+    var owner_number = $('#owner_number_select').val();
+    if (owner_number.length == 0) {
+        return false;
+    }
+    auxiliary_datas[k]['owner_number'] = owner_number;
+    auxiliary_set[current_auxiliary].data("owner_number",owner_number);
+
+    var input_number = $('#input_number_select').val();
+    if (input_number.length == 0) {
+        return false;
+    }
+    auxiliary_datas[k]['input_number'] = input_number;
+    auxiliary_set[current_auxiliary].data("input_number",input_number);
+
+    var staatus = $('#status_select').val();
+    if (status.length == 0) {
+        return false;
+    }
+    auxiliary_datas[k]['status'] = status;
+    auxiliary_set[current_auxiliary].data("status",status);
+
 };
 
 

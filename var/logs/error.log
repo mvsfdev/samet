@@ -21458,3 +21458,264 @@ AttributeError: 'NoneType' object has no attribute 'getDeviceState'
 [21/Sep/2014:16:46:15] ENGINE Bus STOPPED
 [21/Sep/2014:16:46:15] ENGINE Bus EXITING
 [21/Sep/2014:16:46:15] ENGINE Bus EXITED
+[21/Sep/2014:16:51:18] ENGINE Bus STARTING
+[21/Sep/2014:16:51:18] ENGINE Started monitor thread '_TimeoutMonitor'.
+[21/Sep/2014:16:51:18] ENGINE Bus STARTED
+[22/Sep/2014:08:27:07] ENGINE Bus STARTING
+[22/Sep/2014:08:27:07] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:08:27:07] ENGINE Bus STARTED
+[22/Sep/2014:10:06:56] ENGINE Bus STOPPING
+[22/Sep/2014:10:06:56] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:10:06:56] ENGINE Bus STOPPED
+[22/Sep/2014:10:06:56] ENGINE Bus EXITING
+[22/Sep/2014:10:06:56] ENGINE Bus EXITED
+[22/Sep/2014:10:07:22] ENGINE Bus STARTING
+[22/Sep/2014:10:07:22] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:10:07:22] ENGINE Bus STARTED
+[22/Sep/2014:10:20:25] ENGINE Bus STOPPING
+[22/Sep/2014:10:20:25] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:10:20:25] ENGINE Bus STOPPED
+[22/Sep/2014:10:20:25] ENGINE Bus EXITING
+[22/Sep/2014:10:20:25] ENGINE Bus EXITED
+[22/Sep/2014:10:20:31] ENGINE Bus STARTING
+[22/Sep/2014:10:20:31] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:10:20:31] ENGINE Bus STARTED
+[22/Sep/2014:10:38:30] ENGINE Bus STOPPING
+[22/Sep/2014:10:38:30] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:10:38:30] ENGINE Bus STOPPED
+[22/Sep/2014:10:38:30] ENGINE Bus EXITING
+[22/Sep/2014:10:38:30] ENGINE Bus EXITED
+[22/Sep/2014:10:38:33] ENGINE Bus STARTING
+[22/Sep/2014:10:38:33] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:10:38:33] ENGINE Bus STARTED
+[22/Sep/2014:13:14:43] ENGINE Bus STOPPING
+[22/Sep/2014:13:14:43] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:13:14:43] ENGINE Bus STOPPED
+[22/Sep/2014:13:14:43] ENGINE Bus EXITING
+[22/Sep/2014:13:14:43] ENGINE Bus EXITED
+[22/Sep/2014:13:14:47] ENGINE Bus STARTING
+[22/Sep/2014:13:14:47] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:13:14:47] ENGINE Bus STARTED
+[22/Sep/2014:13:43:16] ENGINE Bus STOPPING
+[22/Sep/2014:13:43:16] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:13:43:16] ENGINE Bus STOPPED
+[22/Sep/2014:13:43:16] ENGINE Bus EXITING
+[22/Sep/2014:13:43:16] ENGINE Bus EXITED
+[22/Sep/2014:13:43:19] ENGINE Bus STARTING
+[22/Sep/2014:13:43:19] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:13:43:19] ENGINE Bus STARTED
+[22/Sep/2014:13:45:35] ENGINE Bus STOPPING
+[22/Sep/2014:13:45:35] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:13:45:35] ENGINE Bus STOPPED
+[22/Sep/2014:13:45:35] ENGINE Bus EXITING
+[22/Sep/2014:13:45:35] ENGINE Bus EXITED
+[22/Sep/2014:13:45:38] ENGINE Bus STARTING
+[22/Sep/2014:13:45:38] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:13:45:38] ENGINE Bus STARTED
+[22/Sep/2014:13:56:55] ENGINE Bus STOPPING
+[22/Sep/2014:13:56:55] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:13:56:55] ENGINE Bus STOPPED
+[22/Sep/2014:13:56:55] ENGINE Bus EXITING
+[22/Sep/2014:13:56:55] ENGINE Bus EXITED
+[22/Sep/2014:13:56:58] ENGINE Bus STARTING
+[22/Sep/2014:13:56:58] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:13:56:58] ENGINE Bus STARTED
+[22/Sep/2014:13:58:37] ENGINE Bus STOPPING
+[22/Sep/2014:13:58:37] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:13:58:37] ENGINE Bus STOPPED
+[22/Sep/2014:13:58:37] ENGINE Bus EXITING
+[22/Sep/2014:13:58:37] ENGINE Bus EXITED
+[22/Sep/2014:13:58:39] ENGINE Bus STARTING
+[22/Sep/2014:13:58:39] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:13:58:39] ENGINE Bus STARTED
+[22/Sep/2014:14:17:10] HTTP Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cprequest.py", line 670, in respond
+    response.body = self.handler()
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/encoding.py", line 217, in __call__
+    self.body = self.oldhandler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cpdispatch.py", line 61, in __call__
+    return self.callable(*self.args, **self.kwargs)
+  File "/Users/fed/0918/samet/www.py", line 714, in upload
+    os.link(theFile.file.name, './data/media/'+theFile.filename)
+OSError: [Errno 17] File exists
+
+[22/Sep/2014:14:24:16] ENGINE Bus STOPPING
+[22/Sep/2014:14:24:16] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:14:24:16] ENGINE Bus STOPPED
+[22/Sep/2014:14:24:16] ENGINE Bus EXITING
+[22/Sep/2014:14:24:16] ENGINE Bus EXITED
+[22/Sep/2014:14:24:19] ENGINE Bus STARTING
+[22/Sep/2014:14:24:19] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:14:24:19] ENGINE Bus STARTED
+[22/Sep/2014:14:26:02] ENGINE Bus STOPPING
+[22/Sep/2014:14:26:02] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:14:26:02] ENGINE Bus STOPPED
+[22/Sep/2014:14:26:02] ENGINE Bus EXITING
+[22/Sep/2014:14:26:02] ENGINE Bus EXITED
+[22/Sep/2014:14:26:04] ENGINE Bus STARTING
+[22/Sep/2014:14:26:04] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:14:26:04] ENGINE Bus STARTED
+[22/Sep/2014:14:27:04] ENGINE Bus STOPPING
+[22/Sep/2014:14:27:04] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:14:27:04] ENGINE Bus STOPPED
+[22/Sep/2014:14:27:04] ENGINE Bus EXITING
+[22/Sep/2014:14:27:04] ENGINE Bus EXITED
+[22/Sep/2014:14:27:06] ENGINE Bus STARTING
+[22/Sep/2014:14:27:06] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:14:27:06] ENGINE Bus STARTED
+[22/Sep/2014:14:27:59] ENGINE Bus STOPPING
+[22/Sep/2014:14:27:59] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:14:27:59] ENGINE Bus STOPPED
+[22/Sep/2014:14:27:59] ENGINE Bus EXITING
+[22/Sep/2014:14:27:59] ENGINE Bus EXITED
+[22/Sep/2014:14:28:02] ENGINE Bus STARTING
+[22/Sep/2014:14:28:02] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:14:28:02] ENGINE Bus STARTED
+[22/Sep/2014:14:28:41] ENGINE Bus STOPPING
+[22/Sep/2014:14:28:41] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:14:28:41] ENGINE Bus STOPPED
+[22/Sep/2014:14:28:41] ENGINE Bus EXITING
+[22/Sep/2014:14:28:41] ENGINE Bus EXITED
+[22/Sep/2014:14:28:43] ENGINE Bus STARTING
+[22/Sep/2014:14:28:43] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:14:28:43] ENGINE Bus STARTED
+[22/Sep/2014:14:29:43] ENGINE Bus STOPPING
+[22/Sep/2014:14:29:43] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:14:29:43] ENGINE Bus STOPPED
+[22/Sep/2014:14:29:43] ENGINE Bus EXITING
+[22/Sep/2014:14:29:43] ENGINE Bus EXITED
+[22/Sep/2014:14:29:45] ENGINE Bus STARTING
+[22/Sep/2014:14:29:45] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:14:29:45] ENGINE Bus STARTED
+[22/Sep/2014:14:30:37] ENGINE Bus STOPPING
+[22/Sep/2014:14:30:37] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:14:30:37] ENGINE Bus STOPPED
+[22/Sep/2014:14:30:37] ENGINE Bus EXITING
+[22/Sep/2014:14:30:37] ENGINE Bus EXITED
+[22/Sep/2014:14:30:39] ENGINE Bus STARTING
+[22/Sep/2014:14:30:39] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:14:30:39] ENGINE Bus STARTED
+[22/Sep/2014:14:33:15] ENGINE Bus STOPPING
+[22/Sep/2014:14:33:15] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:14:33:15] ENGINE Bus STOPPED
+[22/Sep/2014:14:33:15] ENGINE Bus EXITING
+[22/Sep/2014:14:33:15] ENGINE Bus EXITED
+[22/Sep/2014:14:33:17] ENGINE Bus STARTING
+[22/Sep/2014:14:33:17] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:14:33:17] ENGINE Bus STARTED
+[22/Sep/2014:14:36:04] HTTP Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cprequest.py", line 670, in respond
+    response.body = self.handler()
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/encoding.py", line 217, in __call__
+    self.body = self.oldhandler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cpdispatch.py", line 61, in __call__
+    return self.callable(*self.args, **self.kwargs)
+  File "/Users/fed/0918/samet/www.py", line 714, in upload
+    os.link(theFile.file.name, './data/media/'+theFile.filename)
+OSError: [Errno 17] File exists
+
+[22/Sep/2014:14:44:01] ENGINE Bus STOPPING
+[22/Sep/2014:14:44:01] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:14:44:01] ENGINE Bus STOPPED
+[22/Sep/2014:14:44:01] ENGINE Bus EXITING
+[22/Sep/2014:14:44:01] ENGINE Bus EXITED
+[22/Sep/2014:14:44:03] ENGINE Bus STARTING
+[22/Sep/2014:14:44:03] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:14:44:03] ENGINE Bus STARTED
+[22/Sep/2014:14:54:05] ENGINE Bus STOPPING
+[22/Sep/2014:14:54:05] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:14:54:05] ENGINE Bus STOPPED
+[22/Sep/2014:14:54:05] ENGINE Bus EXITING
+[22/Sep/2014:14:54:05] ENGINE Bus EXITED
+[22/Sep/2014:14:54:07] ENGINE Bus STARTING
+[22/Sep/2014:14:54:07] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:14:54:07] ENGINE Bus STARTED
+[22/Sep/2014:14:54:32] HTTP Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cprequest.py", line 670, in respond
+    response.body = self.handler()
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/encoding.py", line 217, in __call__
+    self.body = self.oldhandler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cpdispatch.py", line 61, in __call__
+    return self.callable(*self.args, **self.kwargs)
+  File "/Users/fed/0918/samet/www.py", line 714, in upload
+    os.link(theFile.file.name, './data/media/'+theFile.filename)
+OSError: [Errno 17] File exists
+
+[22/Sep/2014:14:55:14] HTTP Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cprequest.py", line 670, in respond
+    response.body = self.handler()
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/encoding.py", line 217, in __call__
+    self.body = self.oldhandler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cpdispatch.py", line 61, in __call__
+    return self.callable(*self.args, **self.kwargs)
+  File "/Users/fed/0918/samet/www.py", line 714, in upload
+    os.link(theFile.file.name, './data/media/'+theFile.filename)
+OSError: [Errno 17] File exists
+
+[22/Sep/2014:15:11:25] HTTP Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cprequest.py", line 670, in respond
+    response.body = self.handler()
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/encoding.py", line 217, in __call__
+    self.body = self.oldhandler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cpdispatch.py", line 61, in __call__
+    return self.callable(*self.args, **self.kwargs)
+  File "/Users/fed/0918/samet/www.py", line 714, in upload
+    os.link(theFile.file.name, './data/media/'+theFile.filename)
+OSError: [Errno 17] File exists
+
+[22/Sep/2014:15:21:03] ENGINE Bus STOPPING
+[22/Sep/2014:15:21:03] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:15:21:03] ENGINE Bus STOPPED
+[22/Sep/2014:15:21:03] ENGINE Bus EXITING
+[22/Sep/2014:15:21:03] ENGINE Bus EXITED
+[22/Sep/2014:15:21:05] ENGINE Bus STARTING
+[22/Sep/2014:15:21:05] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:15:21:05] ENGINE Bus STARTED
+[22/Sep/2014:15:33:25] ENGINE Bus STOPPING
+[22/Sep/2014:15:33:25] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:15:33:25] ENGINE Bus STOPPED
+[22/Sep/2014:15:33:25] ENGINE Bus EXITING
+[22/Sep/2014:15:33:25] ENGINE Bus EXITED
+[22/Sep/2014:15:42:37] ENGINE Bus STARTING
+[22/Sep/2014:15:42:37] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:15:42:37] ENGINE Bus STARTED
+[22/Sep/2014:15:43:37] HTTP Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cprequest.py", line 670, in respond
+    response.body = self.handler()
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/encoding.py", line 217, in __call__
+    self.body = self.oldhandler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cpdispatch.py", line 61, in __call__
+    return self.callable(*self.args, **self.kwargs)
+  File "/Users/fed/0918/samet/www.py", line 714, in upload
+    os.link(theFile.file.name, './data/media/'+theFile.filename)
+AttributeError: 'cStringIO.StringO' object has no attribute 'name'
+
+[22/Sep/2014:16:32:00] ENGINE Bus STOPPING
+[22/Sep/2014:16:32:00] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:16:32:00] ENGINE Bus STOPPED
+[22/Sep/2014:16:32:00] ENGINE Bus EXITING
+[22/Sep/2014:16:32:00] ENGINE Bus EXITED
+[22/Sep/2014:16:32:37] ENGINE Bus STARTING
+[22/Sep/2014:16:32:37] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:16:32:37] ENGINE Bus STARTED
+[22/Sep/2014:16:32:48] ENGINE Bus STOPPING
+[22/Sep/2014:16:32:48] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:16:32:48] ENGINE Bus STOPPED
+[22/Sep/2014:16:32:48] ENGINE Bus EXITING
+[22/Sep/2014:16:32:48] ENGINE Bus EXITED
+[22/Sep/2014:16:45:17] ENGINE Bus STARTING
+[22/Sep/2014:16:45:17] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:16:45:17] ENGINE Bus STARTED
+[22/Sep/2014:16:45:52] ENGINE Bus STOPPING
+[22/Sep/2014:16:45:52] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:16:45:52] ENGINE Bus STOPPED
+[22/Sep/2014:16:45:52] ENGINE Bus EXITING
+[22/Sep/2014:16:45:52] ENGINE Bus EXITED
+[22/Sep/2014:16:46:08] ENGINE Bus STARTING
+[22/Sep/2014:16:46:08] ENGINE Started monitor thread '_TimeoutMonitor'.
+[22/Sep/2014:16:46:08] ENGINE Bus STARTED
+[22/Sep/2014:17:33:45] ENGINE Bus STOPPING
+[22/Sep/2014:17:33:45] ENGINE Stopped thread '_TimeoutMonitor'.
+[22/Sep/2014:17:33:45] ENGINE Bus STOPPED
+[22/Sep/2014:17:33:45] ENGINE Bus EXITING
+[22/Sep/2014:17:33:45] ENGINE Bus EXITED

@@ -13,100 +13,113 @@
   <!--body ondragstart="window.event.returnValue=false"
         oncontextmenu="window.event.returnValue=false"
         onselectstart="event.returnValue=false"-->
-  <body>
 
+ <body>
+    <div id="file" title= "File">
+      <form enctype="multipart/form-data" method="post" action="upload">
+	<input type="file" name="theFile">
+	<br>
+	<input type="submit">
+      </form>
+    </div>
+
+    <div id="canvas"></div>
+
+    <!--div id="desktop"-->
+ 
+
+    <div id="message_box">
+    </div>
+    <div id="button_box">
+      <button id=left_btn class="msg_btn">Left</button>
+      <button id=mid_btn class="msg_btn">Mid</button>
+      <button id=right_btn class="msg_btn">Right</button>
+    </div>
     
-    
-  <!--div id="desktop"-->
-      <div id="canvas"></div>
-      <!--div id="tag_box">
-	<input id="write" name="textname" type="text" />
-      </div-->
-      <div id="message_box">
-      </div>
-      <div id="button_box">
-        <button id=left_btn class="msg_btn">Left</button>
-        <button id=mid_btn class="msg_btn">Mid</button>
-        <button id=right_btn class="msg_btn">Right</button>
-      </div>
-      <div id="dialog" title="">
+    <div id="dialog" title="">
+      <form>
+        <fieldset>
+          <lable for="name">Name</label>
+<input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
+<label for="name" id="owner">Owner</label>
+<select class="selectMenu" name="owner_select" id="owner_select">
+  <option value="PM" selected="selected">PM</option>
+  <option value="LU">LU</option>
+  <option value="ILU">ILU</option>
+  <option value="RM">RM</option>            
+</select>
+<label for="number" id="owner_number">Owner Number</label>
+<select name="owner_number" id="owner_number_select">
+  <option>1</option>
+  <option selected="selected">2</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+  <option>6</option>
+  <option>7</option>
+  <option>8</option>
+</select> 
+<label for="number" id="input_number">Input number</label>
+<select name="input_number" id="input_number_select">
+  <option>1</option>
+  <option selected="selected">2</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+  <option>6</option>
+</select>        
+<label for="number" id="status">Status</label>
+<select name="status" id="status_select">
+  <option>normal open</option>
+  <option selected="selected">normal close</option>
+</select>   
 
-        <form>
-          <fieldset>
-            <lable for="name">Name</label>
-            <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
-
-
-	    <label for="name" id="owner">Owner</label>
-	    <select class="selectMenu" name="owner_select" id="owner_select">
-	      <option value="PM" selected="selected">PM</option>
-	      <option value="LU">LU</option>
-	      <option value="ILU">ILU</option>
-	      <option value="RM">RM</option>            
-	    </select>
-            <label for="number" id="owner_number">Owner Number</label>
-	    <select name="owner_number" id="owner_number_select">
-	      <option>1</option>
-	      <option selected="selected">2</option>
-	      <option>3</option>
-	      <option>4</option>
-	      <option>5</option>
-	      <option>6</option>
-	      <option>7</option>
-	      <option>8</option>
-	    </select> 
-            <label for="number" id="input_number">Input number</label>
-	    <select name="input_number" id="input_number_select">
-	      <option>1</option>
-	      <option selected="selected">2</option>
-	      <option>3</option>
-	      <option>4</option>
-	      <option>5</option>
-	      <option>6</option>
-	    </select>        
-            <label for="number" id="status">Status</label>
-	    <select name="status" id="status_select">
-	      <option>normal open</option>
-	      <option selected="selected">normal close</option>
-	    </select>   
-	    
 	    
 
 
 
-	    <label for="number" id="owner_pm">Owner PM</label>
-	    <select name="number" id="owner_pm_select">
-	      <option>1</option>
-	      <option selected="selected">2</option>
-	      <option>3</option>
-	      <option>4</option>
-	      <option>5</option>
-	      <option>6</option>
-	      <option>7</option>
-	      <option>8</option>
-	    </select>
-	    <label for="name" id="cable">Cable</label>
-	    <select class="selectMenu" name="cable" id="cable_select">
-	      <option value="A" selected="selected">Cable A</option>
-	      <option value="B">Cable B</option>
-	    </select>
+<label for="number" id="owner_pm">Owner PM</label>
+<select name="number" id="owner_pm_select">
+  <option>1</option>
+  <option selected="selected">2</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+  <option>6</option>
+  <option>7</option>
+  <option>8</option>
+</select>
+<label for="name" id="cable">Cable</label>
+<select class="selectMenu" name="cable" id="cable_select">
+  <option value="A" selected="selected">Cable A</option>
+  <option value="B">Cable B</option>
+</select>
 
-	    <p>
-	      <label for="amount" id="subcell_start"></label>
-	      <!--input type="text" id="subcell_start" readonly style="border:0; color:#f6931f; font-weight:bold;"-->
-	      <div id="slider_subcell_start"></div>
-	      <label for="amount" id="subcell_end"></label>
-	      <!--input type="text" id="subcell_end" readonly style="border:0; color:#f6931f; font-weight:bold;"-->
-	    </p>  
-	    <div id="slider_subcell_end"></div>
+<p>
+  <label for="amount" id="subcell_start"></label>
+  <!--input type="text" id="subcell_start" readonly style="border:0; color:#f6931f; font-weight:bold;"-->
+  <div id="slider_subcell_start"></div>
+  <label for="amount" id="subcell_end"></label>
+  <!--input type="text" id="subcell_end" readonly style="border:0; color:#f6931f; font-weight:bold;"-->
+</p>  
+<div id="slider_subcell_end"></div>
 
-            <input type="text" name="name" id="position" value="position" class="text ui-widget-content ui-corner-all"  readonly="readonly">
-            <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+<input type="text" name="name" id="position" value="position" class="text ui-widget-content ui-corner-all"  readonly="readonly">
+<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
 
-          </fieldset>
-        </form>
-      </div>
-    <!--/div-->
-  </body>
+</fieldset>
+</form>
+</div>
+
+<div id="dialog_set" title="Load datas">
+  <form>
+    <fieldset>
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
+
+<!--/div-->
+</body>
 </html>
 
