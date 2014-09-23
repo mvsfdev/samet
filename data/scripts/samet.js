@@ -132,7 +132,7 @@ function handle_install_edit(event) {
                               "Put Datas": function() {
 				  put_sda("putSegments",segment_datas);
 				  put_sda("putDevices",device_datas);
-				  put_sda("putauxiliaries",auxiliary_datas);
+				  put_sda("putAuxiliaries",auxiliary_datas);
 
                                   $(this).dialog('close');
                               },
@@ -435,122 +435,100 @@ function select_segment(){
     cy = segment_datas[k]["y1"] * map.scale_y;
     segment_controls[1].attr({"cx" : cx , "cy" : cy});
 };
+
 function handle_move_segment_edit(event) {
-var k = segment_set[current_segment].data("key");
-    $("#dialog").dialog({ autoOpen: true,
-                          modal: true,
-			  width: 400,
-			  title: k,
-                          buttons: { 
-                              // "Add": function() {
-                              // },
-                              // "Delete": function() {
-			      // 	  segment_set[current_segment].remove();
-			      // 	  handle_move_segment_next(event)
-                              //     $(this).dialog('close');
-                              // },
-                              Ok: function() {
-				  //segment_valid();
-                                  update_segment_info();
-                                  $(this).dialog('close');
-                              },
-                              Cancel: function() {
-                                  $(this).dialog('close');
-                              }
-                          },
-                          open: function() {
-    			  }
-                        });
-    //$("#dialog").val('1');
-    //$("#label_sub").text('AB');
-    segment_edit();
-    $("#dialog").dialog('open');
-    //var msg = segment_set[current_segment].data('name');
-    //message(msg);
+    var k = segment_set[current_segment].data('key');
+    var d = segment_datas[k];
+    console.log(k);
+    seg_form.dialog(k,d);
     return false;
 };
 
-var from , to;
+var seg_form = new Object({ width : 400,
+			    height: 300});
 
-function segment_edit(){
-    var k = segment_set[current_segment].data("key");
-    $('#name').val(segment_set[current_segment].data('name'));
-    $('#position').val("(" + 
-		       segment_datas[k]['x0'] + "," + 
-		       segment_datas[k]['y0'] + ")" +  "-" + "(" + 
-		       segment_datas[k]['x1'] + "," + 
-		       segment_datas[k]['y1'] + ")" );
-    $("#owner_pm_select").val(segment_datas[k]['owner_pm'] || 1);
-    $("#cable_select").val(segment_datas[k]['cable'] || 'B');
+seg_form.fill = function(k,d) {
+    this.title = k;
+    this.name = d['name'];
+    this.device = d['device'] || 1;
+    this.from = d['subcell_start'] || 1;
+    this.to = d['subcell_end'] || 1;
+    this.position = "(" + d['x0'] + "," + d['y0'] + ")" +
+	"(" + d['x1'] + "," + d['y1'] + ")" ; 	    
+};
 
-    from = segment_datas[k]["from_subcell"] || 10;
-    to = segment_datas[k]["to_subcell"] || 30;
-    $(function() {
-	$("#slider_subcell_start").slider({
-	    range: "max",
-	    min: 1,
-	    max: 190,
-	    value: from,
-	    slide: function( event, ui ) {
-		//$( "#subcell_start" ).val(ui.value );
-		from = ui.value;
-		$("#subcell_start").text("From subcell : " + from);
-					  
-	    }
-	});
-	$( "#subcell_start" ).text("From subcell : " + $( "#slider_subcell_start" ).slider( "value"));
-		
-	$( "#slider_subcell_end" ).slider({
-	    range: "max",
-	    min: 1,
-	    max: 190,
-	    value: to,
-	    slide: function( event, ui ) {
-		to = ui.value;
-		$( "#subcell_end" ).text("To subcell : " +  to );
-	    }
-	});
-	$( "#subcell_end" ).text("To subcell : " +  $( "#slider_subcell_end" ).slider( "value" ) );
+seg_form.submit = function(k,d) {
+    d['name'] = this.name;
+    d['device'] = this.device;
+    d['subcell_start'] = this.from;
+    d['subcell_end'] = this.to;
+};
+    
+seg_form.dialog = function(key,datas) {    
+    fm = this;
+    fm.title = key;
+    $("#seg_dialog").dialog({ autoOpen: true,
+                              modal: true,
+			      width: fm.width,
+			      title: fm.title,
+                              buttons: { 
+				  Ok: function() {
+				      fm.name = $('#seg_name').val();
+				      fm.device = $('#seg_owner_pm').val();
+				      //fm.subcell_start = $('#slider_subcell_start').val();
+				      //fm.subcell_end = $('#slider_subcell_end').val();
+				      fm.submit(key,datas);
+                                      $(this).dialog('close');
+				      
+				  },
+				  Cancel: function() {
+                                      $(this).dialog('close');
+				  }
+                              },
+                              open: function() {
+				  fm.fill(key,datas);
+				  $('#seg_name').val(fm.name);
+				  $('#seg_owner_pm').val(fm.device);
+				  //$('#slider_subcell_start').val(fm.subcell_start);
+				  //$('#slider_subcell_end').val(fm.subcell_end);
+				  $('#seg_position').val(fm.position);
+				  fm.edit_subcell();
+    			      }  
+                            });
+    $("#seg_dialog").dialog('open');
+}
+
+seg_form.edit_subcell = function() {
+    fm = this;
+    $("#slider_subcell_start").slider({
+	range: "max",
+	min: 1,
+	max: 190,
+	value: fm.from,
+	slide: function( event, ui ) {
+	    //$( "#subcell_start" ).val(ui.value );
+	    fm.from = ui.value;
+	    $("#subcell_start").text("From subcell : " + fm.from);
+	    
+	}
     });
+    $( "#subcell_start" ).text("From subcell : " + $( "#slider_subcell_start" ).slider( "value"));
     
-    $("#owner").hide();
-    $("#owner_select").hide();
-    $("#owner_number").hide();
-    $("#owner_number_select").hide();
-    $("#input_number").hide();
-    $("#input_number_select").hide();
-    $("#status").hide();
-    $("#status_select").hide();
-    $("#cable").hide();
-    $("#cable_select").hide();
-    $("#subcell_start").show();
-    $("#slider_subcell_start").show();
-    $("#subcell_end").show();
-    $("#slider_subcell_end").show();
-    $("#owner_pm").show();
-    $("#owner_pm_select").show();
+    $( "#slider_subcell_end" ).slider({
+	range: "max",
+	min: 1,
+	max: 190,
+	value: fm.to,
+	slide: function( event, ui ) {
+	    fm.to = ui.value;
+	    $( "#subcell_end" ).text("To subcell : " +  fm.to);
+	}
+    });
+    $( "#subcell_end" ).text("To subcell : " +  $( "#slider_subcell_end" ).slider( "value" ) );
 };
-
-function update_segment_info() {
-    var name = $('#name').val();
-    if (name.length == 0) {
-        return false;
-    }
-    var k = segment_set[current_segment].data("key");
-    segment_datas[k]['name'] = name;
-    segment_set[current_segment].data("name",name);
     
-    //put_sda("putSegments",segment_datas);
-    var owner_pm = $('#owner_pm_select').val();
-    if (owner_pm.length == 0) {
-	return false;
-    }
-    segment_datas[k]['owner_pm'] = owner_pm;
 
 
-    segment_datas[k]['from_subcell'] = from;
-    segment_datas[k]['to_subcell'] = to;
-};
 
 function handle_move_segment_next(event) {
     segment_set[current_segment].attr(segment_attr);
@@ -618,7 +596,7 @@ function put_segments(segments) {
  *   Device
  * 
  ***********************************************************************************************/
-dispatch['Device'] = {'LT': '编辑',       'L' : handle_move_device_edit,
+dispatch['Device'] = {'LT': '编辑',       'L' : handle_move_dev_edit,
 		      'MT': '下一个',     'M' : handle_move_device_next,
 		      'RT': '返回',       'R' : handle_move_device_back,
 		      'MSG': '参数设置模式......'};
@@ -806,92 +784,61 @@ function select_device(){
     return false;
 };
 
-
-function handle_move_device_edit(event) {
-var k = device_set[current_device].data("key");
-    $("#dialog").dialog({ autoOpen: true,
-                          modal: true,
-			  width: 400,
-			  title: k,
-                          buttons: { 
-                              // "Add": function() {
-                              // },
-                              // "Delete": function() {
-			      // 	  device_set[current_device].remove();
-			      // 	  handle_move_device_next(event)
-                              //     $(this).dialog('close');
-                              // },
-                              Ok: function() {
-				  update_device_info();
-                                  $(this).dialog('close');
-
-                              },
-                              Cancel: function() {
-                                  $(this).dialog('close');
-                              }
-                          },
-                          open: function() {
-    			  }
-                        });
-    device_edit();
-    $("#dialog").dialog('open');
+function handle_move_dev_edit(event) {
+    var k = device_set[current_device].data('key');
+    var d = device_datas[k];
+    dev_form.dialog(k,d);
     return false;
 };
 
+var dev_form = new Object({ width : 400,
+			    height: 300});
 
-function device_edit(){
-    var k = device_set[current_device].data("key");
-    $('#name').val(device_set[current_device].data('name'));
-    $('#position').val("(" + 
-		       device_datas[k]['x0'] + "," + 
-		       device_datas[k]['y0'] + ")" );
-    $("#owner").hide();
-    $("#owner_select").hide();
-    $("#owner_number").hide();
-    $("#owner_number_select").hide();
-    $("#input_number").hide();
-    $("#input_number_select").hide();
-    $("#status").hide();
-    $("#status_select").hide();
-    $("#subcell_start").hide();
-    $("#slider_subcell_start").hide();
-    $("#subcell_end").hide();
-    $("#slider_subcell_end").hide();
-    $("#cable").show();
-    $("#cable_select").show();
-    $("#owner_pm").show();
-    $("#owner_pm_select").show();
+dev_form.fill = function(k,d) {
+    this.title = k;
+    this.name = d['name'];
+    this.device = d['device'] || 1;
+    this.cable = d['cable'] || 1;
+    this.position = "(" + d['x0'] + "," + d['y0'] + ")" ; 
+    };
 
+dev_form.submit = function(k,d) {
+    d['name'] = this.name;
+    d['device'] = this.device;
+    d['cable'] = this.cable;
 };
-
-function update_device_info() {
-    var name = $('#name').val();
-    if (name.length == 0) {
-        return false;
-    }
-    var k = device_set[current_device].data("key");
-    device_datas[k]['name'] = name;
-    device_set[current_device].data("name",name);
-    //put_sda("putDevices",device_datas);
-
-    var owner_pm = $('#owner_pm_select').val();
-    if (owner_pm.length == 0) {
-        return false;
-    }
-    device_datas[k]['owner_pm'] = owner_pm;
-    device_set[current_device].data("owner_pm",owner_pm);
-
-    var cable = $('#cable_select').val();
-    if (cable.length == 0) {
-        return false;
-    }
-    device_datas[k]['cable'] = cable;
-    device_set[current_device].data("cable",cable);
     
-};
-
-
-
+dev_form.dialog = function(key,datas) {    
+    fm = this;
+    fm.fill(key,datas);
+    $("#dev_dialog").dialog({ autoOpen: true,
+                              modal: true,
+			      width: fm.width,
+			      title: fm.title,
+                              buttons: { 
+				  Ok: function() {
+				      fm.name = $('#dev_name').val();
+				      fm.device = $('#dev_owner_pm').val();
+				      fm.cable = $('#dev_cable').val();
+				      fm.position = $('#dev_position').val();
+				      fm.submit(key,datas);
+                                      $(this).dialog('close');
+				      
+				  },
+				  Cancel: function() {
+                                      $(this).dialog('close');
+				  }
+                              },
+                              open: function() {
+				  $('#dev_name').val(fm.name);
+				  $('#dev_owner_pm').val(fm.device);
+				  $('#cable').val(fm.cable);
+				  $('#dev_position').val(fm.position);
+				  
+    			      }  
+                            });
+    $("#dev_dialog").dialog('open');
+}
 
 function handle_move_device_update(event) {
     var k = device_set[current_device].data("key");
@@ -963,7 +910,7 @@ var auxiliary_selected_attr = { "stroke" : "red",
 			      };
 
 var auxiliary_datas = {
-    "auxiliary1" :{'x0' : 130,
+    "aux_1" :{'x0' : 130,
 		   'y0' : 130,
 		   'x1' : 130,
 		   'y1' : 210,
@@ -973,10 +920,11 @@ var auxiliary_datas = {
 		   'y3' : 130,
 		   'id' : 1,
 		   'name' : 'auxiliary1',
-		   'type' : "seg"
+		   'type' : "seg",
+		   'device' :"RM"
 		  },
     
-    "auxiliary2" :{'x0' : 260,
+    "aux_2" :{'x0' : 260,
 		   'y0' : 260,
 		   'x1' : 260,
 		   'y1' : 420,
@@ -988,7 +936,7 @@ var auxiliary_datas = {
 		   'name' : 'auxiliary2',
 		   'type' : 'seg'
 		  },
-    "auxiliary3" :{'x0' : 300,
+    "aux_3" :{'x0' : 300,
 		   'y0' : 300,
 		   'x1' : 200,
 		   'y1' : 450,
@@ -1001,7 +949,7 @@ var auxiliary_datas = {
 		   'type' : "seg"
 		  },
     
-    "auxiliary4" :{'x0' : 500,
+    "aux_4" :{'x0' : 500,
 		   'y0' : 500,
 		   'x1' : 600,
 		   'y1' : 650,
@@ -1166,96 +1114,76 @@ function select_auxiliary(){
 
 
 
-function handle_move_aux_edit(event) {
-var k = auxiliary_set[current_auxiliary].data("key");
-    $("#dialog").dialog({ autoOpen: true,
-                          modal: true,
-			  width: 400,
-			  title: k,
-                          buttons: { 
-                              // "Add": function() {
-                              // },
-                              // "Delete": function() {
-			      // 	  auxiliary_set[current_auxiliary].remove();
-			      // 	  handle_move_aux_next(event)
-                              //     $(this).dialog('close');
-                              // },
-                              Ok: function() {
-				  update_auxiliary_info();
-                                  $(this).dialog('close');
 
-                              },
-                              Cancel: function() {
-                                  $(this).dialog('close');
-                              }
-                          },
-                          open: function() {
-    			  }
-                        });
-    auxiliary_edit();
-    $("#dialog").dialog('open');
+function handle_move_aux_edit(event) {
+    var k = auxiliary_set[current_auxiliary].data('key');
+    var d = auxiliary_datas[k];
+    aux_form.dialog(k,d);
     return false;
 };
 
+var aux_form = new Object({ width : 400,
+			    height: 300});
 
-function auxiliary_edit(){
-    var k = auxiliary_set[current_auxiliary].data("key");
-    $('#name').val(auxiliary_set[current_auxiliary].data('name'));
-    $('#position').val("(" + 
-		       auxiliary_datas[k]['x0'] + "," + 
-		       auxiliary_datas[k]['y0'] + ")" +"(" + 
-		       auxiliary_datas[k]['x1'] + "," + 
-		       auxiliary_datas[k]['y1'] + ")" +"(" + 
-		       auxiliary_datas[k]['x2'] + "," + 
-		       auxiliary_datas[k]['y2'] + ")" +"(" + 
-		       auxiliary_datas[k]['x3'] + "," + 
-		       auxiliary_datas[k]['y3'] + ")" );
-    $("#owner_select").val(auxiliary_datas[k]['owner'] || 'PM');
-    $("#owner_number_select").val(auxiliary_datas[k]['owner_number'] || 1);
-    $("#input_number_select").val(auxiliary_datas[k]['input_number'] || 1);
-    $("#status_select").val(auxiliary_datas[k]['status'] || 'normal open');
+aux_form.fill = function(k,d) {
+    this.title = k;
+    this.name = d['name'];
+    this.device = d['device'] || 'LU';
+    this.device_number = d['device_number'] || 1;
+    this.input_number = d['input_number'] || 3;
+    this.status = d['status'] || 'normal open';
+    this.position = "("+
+	d['x0'] + "," + d['y0'] + ")" +"(" + 
+	d['x1'] + "," + d['y1'] + ")" +"(" + 
+	d['x2'] + "," + d['y2'] + ")" +"(" + 
+	d['x3'] + "," + d['y3'] + ")" ;
+    };
 
-    $("#owner_pm").hide();
-    $("#owner_pm_select").hide();
-    $("#subcell_start").hide();
-    $("#slider_subcell_start").hide();
-    $("#subcell_end").hide();
-    $("#slider_subcell_end").hide();
-    $("#cable").hide();
-    $("#cable_select").hide();
-    $("#owner").show();
-    $("#owner_select").show();
-    $("#owner_number").show();
-    $("#owner_number_select").show();
-    $("#input_number").show();
-    $("#input_number_select").show();
-    $("#status").show();
-    $("#status_select").show();
-
+aux_form.submit = function(k,d) {
+    d['name'] = this.name;
+    d['device'] = this.device;
+    d['device_number'] = this.device_number;
+    d['input_number'] = this.input_number;
+    d['status'] = this.status;
 };
-
-function update_auxiliary_info() {
-    var name = $('#name').val();
-    if (name.length == 0) {
-        return false;
-    }
-    var k = auxiliary_set[current_auxiliary].data("key");
-    auxiliary_datas[k]['name'] = name;
-
-    var owner = $('#owner_select').val();
-    auxiliary_datas[k]['owner'] = owner;
-
-    var owner_number = $('#owner_number_select').val();
-    auxiliary_datas[k]['owner_number'] = owner_number;
-
-    var input_number = $('#input_number_select').val();
-    auxiliary_datas[k]['input_number'] = input_number;
-
-    var status = $('#status_select').val();
-    auxiliary_datas[k]['status'] = status;
-
-};
-
+    
+aux_form.dialog = function(key,datas) {    
+    fm = this;
+    fm.title = key; 
+    $("#aux_dialog").dialog({ autoOpen: true,
+                              modal: true,
+			      width: fm.width,
+			      title: fm.title,
+                              buttons: { 
+				  Ok: function() {
+				      fm.name = $('#aux_name').val();
+				      fm.device = $('#aux_owner').val();
+				      fm.device_number = $('#aux_owner_num').val();
+				      fm.input_number = $('#aux_input').val();
+				      fm.status = $('#aux_status').val();
+				      fm.position = $('#aux_position').val();
+				      
+				      fm.submit(key,datas);
+                                      $(this).dialog('close');
+				      
+				  },
+				  Cancel: function() {
+                                      $(this).dialog('close');
+				  }
+                              },
+                              open: function() {
+				  fm.fill(key,datas);
+				  $('#aux_name').val(fm.name);
+				  $('#aux_owner').val(fm.device);
+				  $('#aux_owner_num').val(fm.device_number);
+				  $('#aux_input').val(fm.input_number);
+				  $('#aux_status').val(fm.status);
+				  $('#aux_position').val(fm.position);
+				  
+    			      }  
+                            });
+    $("#aux_dialog").dialog('open');
+}
 
 
 function handle_move_aux_update(event) {
@@ -1352,11 +1280,6 @@ function handle_parament_back(Event) {
 };
 
 ///////////////////////////////////////////////////// Only Test !!!!!!!!!!!!!!
-
-
-
-
-
 
 
 
