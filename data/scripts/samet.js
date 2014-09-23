@@ -307,8 +307,8 @@ var segment_datas = {
 		 'comment' : 'Seg_1',
 		 'owner_pm' : 6,
 		 'cable' : 'Cable A',
-		 'subcell_start' : 20,
-		 'subcell_end' : 50
+		 'from_subcell' : 20,
+		 'to_subcell' : 50
 		},
 
     "segment2" :{'x0' : 200,
@@ -366,7 +366,7 @@ function drawSegment(data){
     if (segment_set_length == 0) {
         return false;
     };
-    segment_set.click(click_seg);    
+    //segment_set.click(click_seg);    
     return true;
 };
 
@@ -470,6 +470,8 @@ var k = segment_set[current_segment].data("key");
     return false;
 };
 
+var from , to;
+
 function segment_edit(){
     var k = segment_set[current_segment].data("key");
     $('#name').val(segment_set[current_segment].data('name'));
@@ -480,32 +482,37 @@ function segment_edit(){
 		       segment_datas[k]['y1'] + ")" );
     $("#owner_pm_select").val(segment_datas[k]['owner_pm'] || 1);
     $("#cable_select").val(segment_datas[k]['cable'] || 'B');
+
+    from = segment_datas[k]["from_subcell"] || 10;
+    to = segment_datas[k]["to_subcell"] || 30;
     $(function() {
 	$("#slider_subcell_start").slider({
 	    range: "max",
 	    min: 1,
 	    max: 190,
-	    value: segment_datas[k]['subcell_start'] || 10,
+	    value: from,
 	    slide: function( event, ui ) {
 		//$( "#subcell_start" ).val(ui.value );
-
-		$("#subcell_start").text("Start subcell : " + ui.value);
+		from = ui.value;
+		$("#subcell_start").text("From subcell : " + from);
 					  
 	    }
 	});
-	$( "#subcell_start" ).text("Start subcell : " + $( "#slider_subcell_start" ).slider( "value"));
+	$( "#subcell_start" ).text("From subcell : " + $( "#slider_subcell_start" ).slider( "value"));
 		
 	$( "#slider_subcell_end" ).slider({
 	    range: "max",
 	    min: 1,
 	    max: 190,
-	    value: segment_datas[k]['subcell_end'] || 30,
+	    value: to,
 	    slide: function( event, ui ) {
-		$( "#subcell_end" ).text("End subcell : " +  ui.value );
+		to = ui.value;
+		$( "#subcell_end" ).text("To subcell : " +  to );
 	    }
 	});
-	$( "#subcell_end" ).text("End subcell : " +  $( "#slider_subcell_end" ).slider( "value" ) );
+	$( "#subcell_end" ).text("To subcell : " +  $( "#slider_subcell_end" ).slider( "value" ) );
     });
+    
     $("#owner").hide();
     $("#owner_select").hide();
     $("#owner_number").hide();
@@ -539,22 +546,10 @@ function update_segment_info() {
 	return false;
     }
     segment_datas[k]['owner_pm'] = owner_pm;
-    segment_set[current_segment].data("owner_pm",owner_pm);
 
-    var start_subcell= $( "#slider_subcell_start" ).slider();
-    if (start_subcell.length == 0) {
-	return false;
-    }
-    segment_datas[k]['start_subcell'] = start_subcell;
-    segment_set[current_segment].data("start_subcell",start_subcell);
 
-    var end_subcell= $( "#slider_subcell_end" ).slider();
-    if (end_subcell.length == 0) {
-	return false;
-    }
-    segment_datas[k]['end_subcell'] = end_subcell;
-    segment_set[current_segment].data("end_subcell",end_subcell);
-
+    segment_datas[k]['from_subcell'] = from;
+    segment_datas[k]['to_subcell'] = to;
 };
 
 function handle_move_segment_next(event) {
@@ -569,7 +564,7 @@ function handle_move_segment_next(event) {
 
 function handle_move_segment_back(event) {
     //segment_set.click(click_seg);    
-    //put_sda("putSegments",segment_datas);
+    segment_set.unclick(click_seg);    
     segment_set.attr(segment_attr);
     segment_controls[0].remove();
     segment_controls[1].remove();
@@ -588,8 +583,6 @@ function update_segment(k){
     path += "L" + x1 + "," + y1 ; 
     segment_set[current_segment].attr({path:path});
 }
-
-
 /*
 *
 *  Ajax function zone
@@ -761,7 +754,7 @@ function drawDevice(data){
     if (device_set_length == 0) {
         return false;
     }
-    device_set.click(click_dev);
+    //device_set.click(click_dev);
     return true;
 };
 
@@ -919,7 +912,8 @@ function handle_move_device_next(event) {
 };
 
 function handle_move_device_back(event) {
-    put_sda("putDevices",device_datas);
+    //put_sda("putDevices",device_datas);
+    device_set.unclick(click_dev);
     device_set.attr(device_attr);
     device_controls.remove();
     set_system_state('Ready');
@@ -1068,7 +1062,7 @@ function drawAuxiliary(data){
     if (auxiliary_set_length == 0) {
         return false;
     }
-    auxiliary_set.click(click_aux);
+    //auxiliary_set.click(click_aux);
     return true;
 };
 
@@ -1216,6 +1210,11 @@ function auxiliary_edit(){
 		       auxiliary_datas[k]['y2'] + ")" +"(" + 
 		       auxiliary_datas[k]['x3'] + "," + 
 		       auxiliary_datas[k]['y3'] + ")" );
+    $("#owner_select").val(auxiliary_datas[k]['owner'] || 'PM');
+    $("#owner_number_select").val(auxiliary_datas[k]['owner_number'] || 1);
+    $("#input_number_select").val(auxiliary_datas[k]['input_number'] || 1);
+    $("#status_select").val(auxiliary_datas[k]['status'] || 'normal open');
+
     $("#owner_pm").hide();
     $("#owner_pm_select").hide();
     $("#subcell_start").hide();
@@ -1242,36 +1241,18 @@ function update_auxiliary_info() {
     }
     var k = auxiliary_set[current_auxiliary].data("key");
     auxiliary_datas[k]['name'] = name;
-    auxiliary_set[current_auxiliary].data("name",name);
-    put_sda("putAuxiliaries",auxiliary_datas);
 
     var owner = $('#owner_select').val();
-    if (owner.length == 0) {
-        return false;
-    }
     auxiliary_datas[k]['owner'] = owner;
-    auxiliary_set[current_auxiliary].data("owner",owner);
 
     var owner_number = $('#owner_number_select').val();
-    if (owner_number.length == 0) {
-        return false;
-    }
     auxiliary_datas[k]['owner_number'] = owner_number;
-    auxiliary_set[current_auxiliary].data("owner_number",owner_number);
 
     var input_number = $('#input_number_select').val();
-    if (input_number.length == 0) {
-        return false;
-    }
     auxiliary_datas[k]['input_number'] = input_number;
-    auxiliary_set[current_auxiliary].data("input_number",input_number);
 
-    var staatus = $('#status_select').val();
-    if (status.length == 0) {
-        return false;
-    }
+    var status = $('#status_select').val();
     auxiliary_datas[k]['status'] = status;
-    auxiliary_set[current_auxiliary].data("status",status);
 
 };
 
@@ -1296,7 +1277,9 @@ function handle_move_aux_next(event) {
 };
 
 function handle_move_aux_back(event) {
-    put_sda("putAuxiliaries",auxiliary_datas);
+    //put_sda("putAuxiliaries",auxiliary_datas);
+    auxiliary_set.unclick(click_aux);
+
     auxiliary_set.attr(auxiliary_attr);
     set_system_state('Ready');
     auxiliary_controls[0].remove();
