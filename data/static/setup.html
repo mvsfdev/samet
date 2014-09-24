@@ -14,18 +14,36 @@
         oncontextmenu="window.event.returnValue=false"
         onselectstart="event.returnValue=false"-->
 
- <body>
-    <div id="file" title= "File">
-      <form target="iframe" action="upload_map" method="post" enctype="multipart/form-data">
+  <body>
+    <!--iframe name="iframe" id="iframe" style="display:none" ></iframe-->
+    <div id="upload">
+      <form id="upload_map" enctype="multipart/form-data" method="post" action="upload_map" target="iframe">
+	Map:
 	<input type="file" name="file">
 	<br>
-	<input type="submit">
-      </form>
+	<input type="submit" value="Upload">
+	</form>
       <iframe name="iframe" id="iframe" style="display:none" ></iframe>
+
+    <!--div id="upload_db"-->
+      <form enctype="multipart/form-data" method="post" action="upload_db" target="iframe">
+	DB:
+	<input type="file" name="db">
+	<br>
+	<input type="submit" value="Upload">
+    </form>
     </div>
 
-    <div id="canvas"></div>
+    <div id="download">
+      <h2>Download map file</h2>
+      <a href="download_map">This One</a>
+      <h2>Download databse file</h2>
+      <a href="download_db">This One</a>
+    </div>
 
+        
+
+    <div id="canvas"></div>
     <!--div id="desktop"-->
  
 
@@ -40,7 +58,7 @@
       <form>
         <fieldset>
           <lable for="name">Name</label>
-<input type="text" name="name" id="seg_name" value="" class="text ui-widget-content ui-corner-all">
+<input type="text" name="name" id="seg_name" value="" maxlength="20" class="text ui-widget-content ui-corner-all">
 
 <label for="number" >Owner PM</label>
 <select name="number" id="seg_owner_pm">
@@ -83,7 +101,7 @@
   <form>
     <fieldset>
       <lable for="name">Name</label>
-      <input type="text" name="name" id="dev_name" value="" class="text ui-widget-content ui-corner-all">
+      <input type="text" name="name" id="dev_name" maxlength="20" value="" class="text ui-widget-content ui-corner-all">
      
       <label for="number">Owner PM</label>
       <select name="number" id="dev_owner_pm">
@@ -114,7 +132,7 @@
   <form>
     <fieldset>
       <lable for="name">Name</label>
-      <input type="text" name="name" id="aux_name" value="" class="text ui-widget-content ui-corner-all">
+      <input type="text" name="name" id="aux_name" maxlength="20" value="" class="text ui-widget-content ui-corner-all">
       <label for="aux_owner" >Owner</label>
       <select class="selectMenu" name="aux_owner" id="aux_owner">
 	<option value="PM" selected="selected">PM</option>

@@ -146,7 +146,7 @@ function handle_install_edit(event) {
 
 
 function open_file(event) {
-    $("#file").dialog({ autoOpen: true,
+    $("#upload_map").dialog({ autoOpen: true,
                           modal: true,
 			  width: 400,
                         });
@@ -321,8 +321,8 @@ var segment_datas = {
 		 'comment' : 'Seg_2',
 		 'owner_pm' : 1,
 		 'cable' : 'Cable A',
-		 'subcell_start' : 20,
-		 'subcell_end' : 50
+		 'from_subcell' : 20,
+		 'to_subcell' : 50
 
 		},
 
@@ -451,8 +451,8 @@ seg_form.fill = function(k,d) {
     this.title = k;
     this.name = d['name'];
     this.device = d['device'] || 1;
-    this.from = d['subcell_start'] || 1;
-    this.to = d['subcell_end'] || 1;
+    this.from = d['from_subcell'] || 1;
+    this.to = d['to_subcell'] || 1;
     this.position = "(" + d['x0'] + "," + d['y0'] + ")" +
 	"(" + d['x1'] + "," + d['y1'] + ")" ; 	    
 };
@@ -460,8 +460,10 @@ seg_form.fill = function(k,d) {
 seg_form.submit = function(k,d) {
     d['name'] = this.name;
     d['device'] = this.device;
-    d['subcell_start'] = this.from;
-    d['subcell_end'] = this.to;
+    d['from_subcell'] = this.subcell_start;
+    d['to_subcell'] = this.subcell_end;
+    //d['from_subcell'] = this.from;
+    //d['to_subcell'] = this.to;
 };
     
 seg_form.dialog = function(key,datas) {    
@@ -475,8 +477,8 @@ seg_form.dialog = function(key,datas) {
 				  Ok: function() {
 				      fm.name = $('#seg_name').val();
 				      fm.device = $('#seg_owner_pm').val();
-				      //fm.subcell_start = $('#slider_subcell_start').val();
-				      //fm.subcell_end = $('#slider_subcell_end').val();
+				      fm.subcell_start = fm.from;
+				      fm.subcell_end = fm.to;
 				      fm.submit(key,datas);
                                       $(this).dialog('close');
 				      
@@ -1259,18 +1261,20 @@ function get_auxiliary() {
  * 
  ***********************************************************************************************/
 
-dispatch['parament'] = {'LT': '导入',      'L' : handle_parament_import,
-			'MT': '导出',     'M' : handle_parament_export,
+dispatch['parament'] = {'LT': '恢复',      'L' : handle_parament_import,
+			'MT': '备份',     'M' : handle_parament_export,
 			'RT': '返回',     'R' : handle_parament_back,
 			'MSG': '参数设置模式......'};
 
 function handle_parament_import(event) {
-    message('导入');
+    load_datas();
+    message('恢复');
     return false;
 };
 
 function handle_parament_export(event) {
-    message('导出');
+    save_datas();
+    message('数据备份');
     return false;
 };
 
@@ -1278,6 +1282,33 @@ function handle_parament_back(Event) {
     set_system_state('Ready');
     return false;
 };
+
+
+
+
+function load_datas(event) {
+    $("#upload").dialog({ autoOpen: true,
+                             modal: true,
+			     width: 400,
+			     title: "Upload"
+                           });
+    //$("#dialog").dialog('open');
+
+    return false;
+};
+
+function save_datas(event) {
+    $("#download").dialog({ autoOpen: true,
+				modal: true,
+				width: 400,
+				title:"Download"
+			      });
+    //$("#dialog").dialog('open');
+
+    return false;
+};
+
+
 
 ///////////////////////////////////////////////////// Only Test !!!!!!!!!!!!!!
 
