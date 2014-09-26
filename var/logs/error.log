@@ -22406,3 +22406,56 @@ AttributeError: 'NoneType' object has no attribute 'read'
 [24/Sep/2014:16:46:44] ENGINE Bus STOPPED
 [24/Sep/2014:16:46:44] ENGINE Bus EXITING
 [24/Sep/2014:16:46:44] ENGINE Bus EXITED
+[26/Sep/2014:08:54:32] ENGINE Bus STARTING
+[26/Sep/2014:08:54:32] ENGINE Started monitor thread '_TimeoutMonitor'.
+[26/Sep/2014:08:54:32] ENGINE Bus STARTED
+[26/Sep/2014:08:54:58] HTTP Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cprequest.py", line 670, in respond
+    response.body = self.handler()
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/encoding.py", line 217, in __call__
+    self.body = self.oldhandler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/jsontools.py", line 63, in json_handler
+    value = cherrypy.serving.request._json_inner_handler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cpdispatch.py", line 61, in __call__
+    return self.callable(*self.args, **self.kwargs)
+  File "/Users/fed/0926/samet/www.py", line 667, in upload_map
+    return self._write_file(file,uload_path)
+  File "/Users/fed/0926/samet/www.py", line 698, in _write_file
+    data = file.file.read(8192)
+AttributeError: 'NoneType' object has no attribute 'read'
+
+[26/Sep/2014:08:56:27] HTTP Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cprequest.py", line 670, in respond
+    response.body = self.handler()
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/encoding.py", line 217, in __call__
+    self.body = self.oldhandler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/jsontools.py", line 63, in json_handler
+    value = cherrypy.serving.request._json_inner_handler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cpdispatch.py", line 61, in __call__
+    return self.callable(*self.args, **self.kwargs)
+  File "/Users/fed/0926/samet/www.py", line 684, in upload_db
+    return self._write_file(db,uload_path)
+  File "/Users/fed/0926/samet/www.py", line 698, in _write_file
+    data = file.file.read(8192)
+AttributeError: 'NoneType' object has no attribute 'read'
+
+[26/Sep/2014:08:57:22] HTTP Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cprequest.py", line 670, in respond
+    response.body = self.handler()
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/encoding.py", line 217, in __call__
+    self.body = self.oldhandler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/lib/jsontools.py", line 63, in json_handler
+    value = cherrypy.serving.request._json_inner_handler(*args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/CherryPy-3.6.0-py2.7.egg/cherrypy/_cpdispatch.py", line 61, in __call__
+    return self.callable(*self.args, **self.kwargs)
+  File "/Users/fed/0926/samet/www.py", line 667, in upload_map
+    return self._write_file(file,uload_path)
+  File "/Users/fed/0926/samet/www.py", line 698, in _write_file
+    data = file.file.read(8192)
+AttributeError: 'NoneType' object has no attribute 'read'
+
+[26/Sep/2014:09:02:41] ENGINE Bus STOPPING
+[26/Sep/2014:09:02:41] ENGINE Stopped thread '_TimeoutMonitor'.
+[26/Sep/2014:09:02:41] ENGINE Bus STOPPED
+[26/Sep/2014:09:02:41] ENGINE Bus EXITING
+[26/Sep/2014:09:02:41] ENGINE Bus EXITED

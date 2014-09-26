@@ -105,7 +105,7 @@ function handle_parament(event) {
 
 
 function handle_install_edit(event) {
-    $("#dialog_set").dialog({ autoOpen: true,
+    $("#dialog_set").dialog({ autoOpen: false,
                           modal: true,
 			  width: 400,
                           buttons: { 
@@ -140,13 +140,14 @@ function handle_install_edit(event) {
                           open: function() {
     			  }
                         });
+$("#dialog_set").dialog("open");
     return false;
 };
 
 
 
 function open_file(event) {
-    $("#upload_map").dialog({ autoOpen: true,
+    $("#upload_map").dialog({ autoOpen: false,
                           modal: true,
 			  width: 400,
                         });
@@ -439,7 +440,7 @@ function select_segment(){
 function handle_move_segment_edit(event) {
     var k = segment_set[current_segment].data('key');
     var d = segment_datas[k];
-    console.log(k);
+    //console.log(k);
     seg_form.dialog(k,d);
     return false;
 };
@@ -469,7 +470,7 @@ seg_form.submit = function(k,d) {
 seg_form.dialog = function(key,datas) {    
     fm = this;
     fm.title = key;
-    $("#seg_dialog").dialog({ autoOpen: true,
+    $("#seg_dialog").dialog({ autoOpen: false,
                               modal: true,
 			      width: fm.width,
 			      title: fm.title,
@@ -1152,7 +1153,7 @@ aux_form.submit = function(k,d) {
 aux_form.dialog = function(key,datas) {    
     fm = this;
     fm.title = key; 
-    $("#aux_dialog").dialog({ autoOpen: true,
+    $("#aux_dialog").dialog({ autoOpen: false,
                               modal: true,
 			      width: fm.width,
 			      title: fm.title,
